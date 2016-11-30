@@ -45,3 +45,18 @@ void Point::move(double x, double y) {
     mX += x;
     mY += y;
 }
+
+bool Point::operator==(const Point &rhs) const {
+    return mX == rhs.mX &&
+           mY == rhs.mY;
+}
+
+bool Point::operator!=(const Point &rhs) const {
+    return !(rhs == *this);
+}
+
+bool Point::inCircle(const Point& point, double radius) {
+    double dx = mX - point.getX();
+    double dy = mY - point.getY();
+    return dx * dx + dy * dy <= radius * radius;
+}

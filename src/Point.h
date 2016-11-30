@@ -8,6 +8,7 @@
 
 #include <model/Unit.h>
 #include <cmath>
+#include <functional>
 
 class Point {
 public:
@@ -36,6 +37,8 @@ public:
 
     double getDistanceTo(double x, double y);
 
+    bool inCircle(const Point& point, double radius);
+
     template <class T>
     Point operator+(const T& other) {
         auto point = Point(other);
@@ -57,11 +60,27 @@ public:
         return *this;
     }
 
+    bool operator==(const Point &rhs) const;
+
+    bool operator!=(const Point &rhs) const;
+
     void move(double x, double y);
 
 private:
     double mX;
     double mY;
 };
+
+namespace std {
+    template <>
+    struct hash<Point> {
+        using argument_type = Point;
+        using result_type = size_t;
+        size_t operator()(const Point& point) const {
+            std::hash<double> h;
+            return h(point.getX()) ^ h(point.getY());
+        }
+    };
+}
 
 
