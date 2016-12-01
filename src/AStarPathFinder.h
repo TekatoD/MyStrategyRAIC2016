@@ -11,7 +11,7 @@ class AStarPathFinder : public PathFinder {
 public:
     AStarPathFinder(Graph::Ptr graph);
 
-    std::forward_list<Point> findPath(const Point &start, const Point &end) override;
+    std::forward_list<Point> findPath(const Point& start, const Point& end) override;
 
 };
 

@@ -29,7 +29,7 @@ std::forward_list<Point> AStarPathFinder::findPath(const Point& start, const Poi
         auto contains = waypoints.find(pose);
         if (contains != waypoints.cend()) {
             waypoints.emplace(current);
-        } else if (contains->second > dist) {
+        } else if (contains != waypoints.cend() && contains->second > dist) { //Segmantation fault was here
             contains->second = dist;
         }
 

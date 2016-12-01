@@ -6,6 +6,7 @@
 #pragma once
 
 #include "Point.h"
+#include "Graph.h"
 #include <unordered_map>
 #include <map>
 #include <forward_list>
@@ -13,31 +14,28 @@
 #include <limits>
 #include <algorithm>
 
-class Map {
+class Map : public Graph {
 public:
+
     Map();
 
     void addPoint(const std::string& name, Point point);
 
     void addEdge(const std::string& start, const std::string& end);
+
+    std::vector<std::pair<Point, double>> getNeighbours(const Point& point) const override ;
+
+    Point getNearestVertex(const Point& point) const override;
+
+    Point getPointByName(const std::string& point) const;
 private:
 
-    template <class T>
-    std::string toVertex(T point) {
-        Point tmp{point};
-        auto result =std::min_element(mWayPoints.begin(), mWayPoints.end(), [tmp](std::pair<std::string, std::shared_ptr<Point>>& p1,
-                                                                                  std::pair<std::string, std::shared_ptr<Point>>& p2){
-            return p1.second->getDistanceTo(tmp) < p2.second->getDistanceTo(tmp);
-        });
-        return result->first;
-    }
-
-    std::string toVertex(const std::string& point);
 
 
     struct Edge {
         Edge(const std::string& start, const std::string& end, double distance) :
                 start(start), end(end), distance(distance) {}
+
         std::string start;
         std::string end;
         double distance;

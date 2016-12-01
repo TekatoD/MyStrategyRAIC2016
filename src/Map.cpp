@@ -20,7 +20,7 @@ void Map::addEdge(const std::string &start, const std::string &end) {
     }
 }
 
-Map::Map() {
+Map::Map() : Graph() {
     this->addPoint("corner_top",       Point(400, 400));
     this->addPoint("corner_bot",       Point(3600, 3600));
     this->addPoint("bonus_bot",        Point(1200.0, 1200.0));
@@ -66,7 +66,37 @@ Map::Map() {
 
 }
 
-std::string Map::toVertex(const std::string &point) {
+std::vector<std::pair<Point, double>> Map::getNeighbours(const Point& point) const {
+    auto result = std::find_if(mWayPoints.begin(), mWayPoints.end(), [point](const auto& pair){
+        return *pair.second == point;
+    });
+    if (result == mWayPoints.end()) {
+        return std::vector<std::pair<Point, double>>{};
+    }
+    std::vector<std::pair<Point, double>> neighbours;
+    for(auto&& edge : mEdges) {
+        if(edge.start == result->first) {
+            neighbours.push_back({Point(*mWayPoints.find(edge.end)->second), edge.distance});
+        }
+        else if(edge.end == result->first) {
+            neighbours.push_back({Point(*mWayPoints.find(edge.start)->second), edge.distance});
+        }
+    }
+    return std::move(neighbours);
+}
+
+Point Map::getNearestVertex(const Point& point) const {
+    auto result =std::min_element(mWayPoints.begin(), mWayPoints.end(), [point](const auto& p1,
+                                                                              const auto& p2){
+        return p1.second->getDistanceTo(point) < p2.second->getDistanceTo(point);
+    });
+    return *result->second;
+}
+
+Point Map::getPointByName(const std::string &point) const {
     auto result = mWayPoints.find(point);
-    return result != mWayPoints.end() ? result->first : std::string {};
+    if (result == mWayPoints.end()) {
+        return Point();
+    }
+    return Point(*result->second);
 }
