@@ -26,21 +26,21 @@ public:
     }
 
 
-    virtual double getX() const;
+    double getX() const;
 
-    virtual void setX(double x);
+    void setX(double x);
 
-    virtual double getY() const;
+    double getY() const;
 
-    virtual void setY(double y);
+    void setY(double y);
 
-    virtual double getDistanceTo(model::Unit unit) const;
+    double getDistanceTo(model::Unit unit) const;
 
-    virtual double getDistanceTo(const Point& point);
+    double getDistanceTo(const Point& point) const;
 
-    virtual double getDistanceTo(double x, double y);
+    double getDistanceTo(double x, double y) const;
 
-    virtual bool inCircle(const Point& point, double radius);
+    bool inCircle(const Point& point, double radius);
 
     template <class T>
     Point operator+(const T& other) {

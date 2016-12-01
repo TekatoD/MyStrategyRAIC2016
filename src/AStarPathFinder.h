@@ -9,9 +9,15 @@
 
 class AStarPathFinder : public PathFinder {
 public:
-    AStarPathFinder(Graph::Ptr graph);
+    AStarPathFinder(Graph::Ptr graph, size_t initialQueueSize = 32);
 
     std::forward_list<Point> findPath(const Point& start, const Point& end) override;
 
+    size_t getInitialQueueSize() const;
+
+    void setInitialQueueSize(size_t initialQueueSize);
+
+private:
+    size_t mInitialQueueSize;
 };
 

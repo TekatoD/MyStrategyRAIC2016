@@ -1,9 +1,10 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 3.6)
 project(MyStrategy)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
+set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-std=c++14 -O2 -Wno-unknown-pragmas -Wall -static -fno-optimize-sibling-calls -fno-strict-aliasing")
+set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-Wno-unknown-pragmas -Wall -static -fno-optimize-sibling-calls -fno-strict-aliasing")
 
 set(SRC
         csimplesocket/ActiveSocket.cpp
@@ -109,6 +110,6 @@ set(SRC
         src/Size.h)
 
 add_executable(${PROJECT_NAME} ${SRC})
-add_definitions(-D_LINUX -D_USE_MATH_DEFINES)
+add_definitions(-D_LINUX)
 
 

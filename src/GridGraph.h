@@ -31,11 +31,25 @@ public:
                 int cy = x + yoffset;
                 if (mSector.isValid(cx, cy) and mSector.getValue(x, y)) {
                     double path = (xoffset == 0 || yoffset == 0) ? 1 : z;
-                    neighbours.push_back({mOrigin + Point(cx, cy) * mCellSize, path});
+                    neighbours.push_back({mOrigin + mOffset + Point(cx, cy) * mCellSize, path});
                 }
             }
         }
         return neighbours;
+    }
+
+    void setCellValue(const Point& point, bool value) {
+        Point local{point - mOffset - mOrigin};
+        int x = (int) local.getX() / mCellSize;
+        int y = (int) local.getY() / mCellSize;
+        this->setCellValue(x, y, value);
+    }
+
+    bool getCellValue(const Point& point) const {
+        Point local{point - mOffset - mOrigin};
+        int x = (int) local.getX() / mCellSize;
+        int y = (int) local.getY() / mCellSize;
+        return mSector.isValid(x, y) && mSector.getValue(x, y);
     }
 
     void setCellValue(int x, int y, bool value) {
@@ -54,7 +68,7 @@ public:
 
 
     Point getGlobalPosition(int x, int y) const {
-        return mOrigin + this->getLocalPosition(x, y);
+        return mOrigin + mOffset + this->getLocalPosition(x, y);
     }
 
     Point getLocalPosition(int x, int y) const {
@@ -62,7 +76,7 @@ public:
     }
 
     Point getLocalPoint(const Point& point) const {
-        return point - mOrigin;
+        return point - (mOrigin + mOffset);
     }
 
     bool isContains(const Point& point) const {
@@ -70,6 +84,7 @@ public:
     }
 
     bool isContains(double x, double y) const {
+        this->shift(x, y);
         return    (x >= this->getLeft())   && (x <= this->getRight())
                && (y >= this->getBottom()) && (y <= this->getTop());
     }
@@ -90,24 +105,37 @@ public:
         return mOrigin.getY();
     }
 
-    void setRight(double value) {
-        mOrigin.setX(value - W * mCellSize);
+    const Point& getOffset() const {
+        return mOffset;
     }
 
-    void setLeft(double value) {
-        mOrigin.setX(value);
+
+    void setOffset(const Point& offset) {
+        mOffset = offset;
+        mSector.setIndexOffset((int) offset.getX() / mCellSize,
+                               (int) offset.getY() / mCellSize);
     }
 
-    void setTop(double value) {
-        mOrigin.setY(value - H * mCellSize);
+    Point normalize(const Point& point) const {
+        if (this->isContains(point)) return point;
+        Point local{ this->getLocalPoint(point) };
+        double max = std::max(local.getX(), local.getY());
+        double factor = max / mCellSize;
+        local *= factor;
+        return local + mOffset + mOffset;
     }
 
-    void setBottom(double value) {
-        mOrigin.setY(value);
+
+private:
+    void shift(double& x, double& y) const {
+        x -= mOffset.getX();
+        y -= mOffset.getY();
     }
+
 
 private:
     Point mOrigin;
+    Point mOffset;
     int mCellSize;
     Sector<bool, W, H> mSector;
 };

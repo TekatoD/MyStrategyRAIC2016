@@ -31,11 +31,11 @@ double Point::getDistanceTo(model::Unit unit) const {
     return unit.getDistanceTo(mX, mY);
 }
 
-double Point::getDistanceTo(const Point& point) {
+double Point::getDistanceTo(const Point& point) const {
     return this->getDistanceTo(point.getX(), point.getY());
 }
 
-double Point::getDistanceTo(double x, double y) {
+double Point::getDistanceTo(double x, double y) const {
     double dx = x - mX;
     double dy = y - mX;
     return std::sqrt((float) (dx * dx + dy * dy));

@@ -3,13 +3,17 @@
  *  @date 11/30/16
  */
 #include "AStarPathFinder.h"
+#include "Log.h"
 #include <list>
 #include <unordered_set>
 #include <unordered_map>
 #include <algorithm>
 #include <numeric>
+#include <queue>
 
-AStarPathFinder::AStarPathFinder(Graph::Ptr graph) : PathFinder(std::move(graph)) {}
+
+AStarPathFinder::AStarPathFinder(Graph::Ptr graph, size_t initialQueueSize)
+        : PathFinder(std::move(graph)), mInitialQueueSize(initialQueueSize) {}
 
 std::forward_list<Point> AStarPathFinder::findPath(const Point& start, const Point& end) {
     using Waypoint = std::pair<Point, double>;
@@ -17,33 +21,41 @@ std::forward_list<Point> AStarPathFinder::findPath(const Point& start, const Poi
         return std::forward_list<Point>{start};
     }
     double dist = 0;
-    std::list<Waypoint> q{{{start, dist}}};
+    auto comparator = [&end](const Waypoint& first, const Waypoint& second) -> bool {
+        return first.first.getDistanceTo(end) + first.second  > second.first.getDistanceTo(end) + second.second;
+    };
+    std::vector<Waypoint> container;
+    container.reserve(mInitialQueueSize);
+    std::priority_queue<Waypoint, std::vector<Waypoint>, decltype(comparator)> q{std::move(comparator),
+                                                                                 std::move(container)};
+    q.push({start, dist});
     std::unordered_map<Point, double> waypoints;
+    waypoints.max_load_factor(0.8);
     bool found = false;
     auto graph = this->getGraph();
     while (!q.empty()) {
-        auto current = std::move(q.front());
-        q.pop_front();
-        auto& pose = std::get<0>(current); //TODO: check
-        dist =  std::get<1>(current);
-        auto contains = waypoints.find(pose);
-        if (contains != waypoints.cend()) {
+        auto current = std::move(q.top());
+        q.pop();
+        auto& pos = current.first;
+        dist =  current.second;
+        auto contains = waypoints.find(pos);
+        if (contains == waypoints.cend()) {
             waypoints.emplace(current);
-        } else if (contains != waypoints.cend() && contains->second > dist) { //Segmantation fault was here
+        } else if (contains->second > dist) {
             contains->second = dist;
+        } else {
+            continue;
         }
 
-        if (pose == end) {
+        if (pos == end) {
             found = true;
             break;
         }
-        auto neighbours = graph->getNeighbours(pose);
+        auto neighbours = graph->getNeighbours(pos);
         for (auto&& neighbour : neighbours) {
-            auto place = std::find_if(q.begin(), q.end(), [&neighbour, dist](const auto& waypoint) -> bool {
-                return neighbour.second + dist < waypoint.second;
-            });
-            q.insert(place, {neighbour.first, neighbour.second + dist});
+            q.push({neighbour.first, neighbour.second + dist});
         }
+
     }
 
     if (!found) {
@@ -55,11 +67,15 @@ std::forward_list<Point> AStarPathFinder::findPath(const Point& start, const Poi
     while (current != start) {
         path.push_front(current);
         const auto& neighbours = graph->getNeighbours(current);
-        auto place = std::accumulate(neighbours.cbegin(), neighbours.cend(), current, [&waypoints, &dist](const Point& acc, const auto& pair) -> Point {
-            double len = waypoints[pair.first];
+        auto place = std::accumulate(neighbours.cbegin(), neighbours.cend(), current,
+                                     [&waypoints, &dist](const Point& acc, const auto& pair) -> Point {
+            const auto& point = pair.first;
+            auto found = waypoints.find(point);
+            if (found == waypoints.end()) return acc;
+            auto len = found->second;
             if (len < dist) {
                 dist = len;
-                return pair.first;
+                return point;
             } else {
                 return acc;
             }
@@ -69,6 +85,16 @@ std::forward_list<Point> AStarPathFinder::findPath(const Point& start, const Poi
     }
     path.push_front(start);
     return std::move(path);
+}
+
+
+size_t AStarPathFinder::getInitialQueueSize() const {
+    return mInitialQueueSize;
+}
+
+
+void AStarPathFinder::setInitialQueueSize(size_t initialQueueSize) {
+    mInitialQueueSize = initialQueueSize;
 }
 
 
