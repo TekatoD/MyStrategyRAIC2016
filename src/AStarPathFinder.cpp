@@ -55,11 +55,11 @@ std::forward_list<Point> AStarPathFinder::findPath(const Point& start, const Poi
     while (current != start) {
         path.push_front(current);
         const auto& neighbours = graph->getNeighbours(current);
-        auto place = std::accumulate(neighbours.cbegin(), neighbours.cend(), current, [&waypoints, &dist](const auto& acc, const auto& point) -> Point {
-            double len = waypoints[point];
+        auto place = std::accumulate(neighbours.cbegin(), neighbours.cend(), current, [&waypoints, &dist](const Point& acc, const auto& pair) -> Point {
+            double len = waypoints[pair.first];
             if (len < dist) {
                 dist = len;
-                return point;
+                return pair.first;
             } else {
                 return acc;
             }

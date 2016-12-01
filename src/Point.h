@@ -9,8 +9,10 @@
 #include <model/Unit.h>
 #include <cmath>
 #include <functional>
+#include <ostream>
+#include "Pointer.h"
 
-class Point {
+class Point : public Pointer<Point> {
 public:
     Point();
 
@@ -64,7 +66,25 @@ public:
 
     bool operator!=(const Point &rhs) const;
 
+    friend std::ostream& operator<<(std::ostream& os, const Point& point);
+
     void move(double x, double y);
+
+    Point operator+(const Point& other);
+
+    const Point& operator+=(const Point& other);
+
+    Point operator-(const Point& other);
+
+    const Point& operator-=(const Point& other);
+
+    Point operator*(double value);
+
+    const Point& operator*=(double other);
+
+    Point operator/(double value);
+
+    const Point& operator/=(double value);
 
 private:
     double mX;

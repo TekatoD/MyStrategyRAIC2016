@@ -60,3 +60,57 @@ bool Point::inCircle(const Point& point, double radius) {
     double dy = mY - point.getY();
     return dx * dx + dy * dy <= radius * radius;
 }
+
+
+std::ostream& operator<<(std::ostream& os, const Point& point) {
+    os << "(" << point.mX << "," << point.mY << ")";
+    return os;
+}
+
+
+Point Point::operator+(const Point& other) {
+    return Point(*this) += other;
+}
+
+
+const Point& Point::operator+=(const Point& other) {
+    mX += other.mX;
+    mY += other.mY;
+    return *this;
+}
+
+
+Point Point::operator-(const Point& other) {
+    return Point(*this) -= other;
+}
+
+
+const Point& Point::operator-=(const Point& other) {
+    mX -= other.mX;
+    mY -= other.mY;
+    return *this;
+}
+
+
+Point Point::operator*(double value) {
+    return Point(*this) * value;
+}
+
+
+const Point& Point::operator*=(double other) {
+    mX *= other;
+    mY *= other;
+    return *this;
+}
+
+
+Point Point::operator/(double value) {
+    return Point(*this) /= value;
+}
+
+
+const Point& Point::operator/=(double value) {
+    mX /= value;
+    mY /= value;
+    return *this;
+}
