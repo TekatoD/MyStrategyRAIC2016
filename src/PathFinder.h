@@ -10,19 +10,15 @@
 
 class PathFinder : public Pointer<PathFinder> {
 public:
-    PathFinder(Graph::Ptr graph) : mGraph(std::move(graph)) { }
+    PathFinder(Graph::Ptr graph);
 
-    Graph::Ptr getGraph() const {
-        return mGraph;
-    }
+    Graph::Ptr getGraph() const;
 
-    void setGraph(Graph::Ptr graph) {
-        mGraph = std::move(graph);
-    }
+    void setGraph(Graph::Ptr graph);
 
     virtual std::forward_list<Point> findPath(const Point& start, const Point& end) = 0;
 
-    virtual ~PathFinder() {};
+    virtual ~PathFinder();;
 
 private:
     Graph::Ptr mGraph;
