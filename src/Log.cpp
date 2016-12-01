@@ -1,19 +1,35 @@
 /**
- * @author arssivka
+ * @author Arseniy Ivin <arssivka@yandex.ru>
  * @date 11/26/16
  */
 
 #include "Log.h"
 
-static const std::string LABELS[] = {"DEBUG", "INFO", "WARN", "ERROR"};
-const std::string* LOG::LABELS = LABELS;
+
+const char* Log::LABELS[4] =  {"DEBUG", "INFO", "WARN", "ERROR"};
+
+TypeLog Log::sGlobalLevel = WARN;
 
 
-LOG::LOG(TypeLog type) : mLevel(type), mStream((mLevel == WARN || mLevel== ERROR) ? std::cerr : std::cout) {
-    mStream << '[' << LABELS[type] << ']';
+Log::Log(TypeLog level) : mLevel(level), mPrompt(false) {
+    if (level >= sGlobalLevel) {
+        this->prompt();
+    }
+}
+
+void Log::prompt() {
+    if (!mPrompt) {
+        std::cerr << '[' << Log::LABELS[mLevel] << ']';
+        mPrompt = true;
+    }
 }
 
 
-LOG::~LOG() {
-    mStream << endl;
+Log::~Log() {
+    if (mPrompt) std::cerr << std::endl;
+}
+
+
+void Log::setGlobalLevel(TypeLog level) noexcept {
+    sGlobalLevel = level;
 }

@@ -1,5 +1,5 @@
 /**
- * @author arssivka
+ * @author Arseniy Ivin <arssivka@yandex.ru>
  * @date 11/25/16
  */
 
@@ -7,9 +7,6 @@
 
 
 #include <iostream>
-#include "NonCopyable.h"
-
-using namespace std;
 
 enum TypeLog {
     DEBUG = 0,
@@ -19,21 +16,33 @@ enum TypeLog {
 };
 
 
-class LOG : NonCopyable {
-public:
-    LOG(TypeLog type);
 
-    ~LOG();
+class Log {
+public:
+    Log(TypeLog level);
+
+    ~Log();
+
 
     template<class T>
-    LOG& operator<<(const T& msg) {
-        mStream << ' ' << msg;
+    Log& operator<<(const T& msg) {
+        if (mLevel >= sGlobalLevel) {
+            this->prompt();
+            std::cerr << ' ' << msg;
+        }
         return *this;
     }
 
+
+    static void setGlobalLevel(TypeLog level) noexcept;
+
 private:
+    void prompt();
+
     TypeLog mLevel;
-    std::ostream& mStream;
-    static const std::string* LABELS;
+    bool mPrompt;
+
+    static TypeLog sGlobalLevel;
+    static const char* LABELS[4];
 };
 
