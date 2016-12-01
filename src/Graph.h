@@ -12,11 +12,9 @@ class Graph : public Pointer<Graph> {
 public:
     Graph() = default;
 
-//    virtual void addPoint(const Point& point) = 0;
-
-//    virtual void addTransition()
-
     virtual std::vector<std::pair<Point, double>> getNeighbours(const Point& point) const = 0;
+
+    virtual Point getNearestVertex(const Point& point) const = 0;
 
     virtual ~Graph() {}
 

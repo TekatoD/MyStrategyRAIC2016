@@ -25,21 +25,22 @@ public:
         mY = other.mY;
     }
 
-    double getX() const;
 
-    void setX(double x);
+    virtual double getX() const;
 
-    double getY() const;
+    virtual void setX(double x);
 
-    void setY(double y);
+    virtual double getY() const;
 
-    double getDistanceTo(model::Unit unit) const;
+    virtual void setY(double y);
 
-    double getDistanceTo(const Point& point);
+    virtual double getDistanceTo(model::Unit unit) const;
 
-    double getDistanceTo(double x, double y);
+    virtual double getDistanceTo(const Point& point);
 
-    bool inCircle(const Point& point, double radius);
+    virtual double getDistanceTo(double x, double y);
+
+    virtual bool inCircle(const Point& point, double radius);
 
     template <class T>
     Point operator+(const T& other) {
@@ -70,19 +71,19 @@ public:
 
     void move(double x, double y);
 
-    Point operator+(const Point& other);
+    Point operator+(const Point& other) const;
 
     const Point& operator+=(const Point& other);
 
-    Point operator-(const Point& other);
+    Point operator-(const Point& other) const;
 
     const Point& operator-=(const Point& other);
 
-    Point operator*(double value);
+    Point operator*(double value) const;
 
     const Point& operator*=(double other);
 
-    Point operator/(double value);
+    Point operator/(double value) const;
 
     const Point& operator/=(double value);
 

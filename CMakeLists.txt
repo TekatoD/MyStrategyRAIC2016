@@ -67,7 +67,46 @@ set(SRC
         src/MyStrategy.cpp
         src/MyStrategy.h
         src/State.cpp
-        src/State.h src/Situation.cpp src/Situation.h src/Ranked.h src/Refreshable.h src/Behavior.cpp src/Behavior.h src/NonCopyable.h src/GameController.cpp src/GameController.h src/Relationship.cpp src/Relationship.h src/Pointer.h src/Point.h src/Point.cpp src/Action.h src/Map.cpp src/Map.h src/Log.cpp src/Log.h src/Mechanism.h src/WalkingAction.cpp src/WalkingAction.h src/WalkingParameters.cpp src/WalkingParameters.h src/CastAction.cpp src/CastAction.h src/MessagingAction.cpp src/MessagingAction.h src/LearningAction.cpp src/LearningAction.h src/Graph.cpp src/Graph.h src/PathFinder.cpp src/PathFinder.h src/AStarPathFinder.cpp src/AStarPathFinder.h)
+        src/State.h src/Situation.cpp
+        src/Situation.h
+        src/Ranked.h
+        src/Refreshable.h
+        src/Behavior.cpp
+        src/Behavior.h
+        src/NonCopyable.h
+        src/GameController.cpp
+        src/GameController.h
+        src/Relationship.cpp
+        src/Relationship.h
+        src/Pointer.h
+        src/Point.h
+        src/Point.cpp
+        src/Action.h
+        src/Map.cpp
+        src/Map.h
+        src/Log.cpp
+        src/Log.h
+        src/Mechanism.h
+        src/WalkingAction.cpp
+        src/WalkingAction.h
+        src/WalkingParameters.cpp
+        src/WalkingParameters.h
+        src/CastAction.cpp
+        src/CastAction.h
+        src/MessagingAction.cpp
+        src/MessagingAction.h
+        src/LearningAction.cpp
+        src/LearningAction.h
+        src/Graph.h
+        src/PathFinder.cpp
+        src/PathFinder.h
+        src/AStarPathFinder.cpp
+        src/AStarPathFinder.h
+        src/Sector.h
+        src/GridGraph.cpp
+        src/GridGraph.h
+        src/Size.cpp
+        src/Size.h)
 
 add_executable(${PROJECT_NAME} ${SRC})
 add_definitions(-D_LINUX -D_USE_MATH_DEFINES)
