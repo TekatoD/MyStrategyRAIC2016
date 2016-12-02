@@ -12,7 +12,7 @@ class Graph {
 public:
     Graph() = default;
 
-    virtual std::vector<std::pair<Point, double>> getNeighbours(const Point& point) const = 0;
+    virtual std::vector<std::pair<Point, double>> getNeighbourVertexes(const Point& point) const = 0;
 
     virtual Point getNearestVertex(const Point& point) const = 0;
 

@@ -15,10 +15,10 @@
 AStarPathFinder::AStarPathFinder(Ptr<Graph> graph, size_t initialQueueSize)
         : PathFinder(std::move(graph)), mInitialQueueSize(initialQueueSize) {}
 
-std::forward_list<Point> AStarPathFinder::findPath(const Point& start, const Point& end) {
+Path AStarPathFinder::findPath(const Point& start, const Point& end) {
     using Waypoint = std::pair<Point, double>;
     if (start == end) {
-        return std::forward_list<Point>{start};
+        return Path{start};
     }
     double dist = 0;
     auto comparator = [&end](const Waypoint& first, const Waypoint& second) -> bool {
@@ -51,7 +51,7 @@ std::forward_list<Point> AStarPathFinder::findPath(const Point& start, const Poi
             found = true;
             break;
         }
-        auto neighbours = graph->getNeighbours(pos);
+        auto neighbours = graph->getNeighbourVertexes(pos);
         for (auto&& neighbour : neighbours) {
             q.push({neighbour.first, neighbour.second + dist});
         }
@@ -59,14 +59,14 @@ std::forward_list<Point> AStarPathFinder::findPath(const Point& start, const Poi
     }
 
     if (!found) {
-        return std::forward_list<Point>{start};
+        return Path{start};
     }
 
-    std::forward_list<Point> path;
+    Path path;
     auto current = end;
     while (current != start) {
-        path.push_front(current);
-        const auto& neighbours = graph->getNeighbours(current);
+        path.push(current);
+        const auto& neighbours = graph->getNeighbourVertexes(current);
         auto place = std::accumulate(neighbours.cbegin(), neighbours.cend(), current,
                                      [&waypoints, &dist](const Point& acc, const auto& pair) -> Point {
             const auto& point = pair.first;
@@ -83,7 +83,7 @@ std::forward_list<Point> AStarPathFinder::findPath(const Point& start, const Poi
         current = place;
 
     }
-    path.push_front(start);
+    path.push(start);
     return std::move(path);
 }
 

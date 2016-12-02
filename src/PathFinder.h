@@ -7,6 +7,7 @@
 
 #include <forward_list>
 #include "Graph.h"
+#include "Path.h"
 
 class PathFinder {
 public:
@@ -16,7 +17,7 @@ public:
 
     void setGraph(Ptr<Graph> graph);
 
-    virtual std::forward_list<Point> findPath(const Point& start, const Point& end) = 0;
+    virtual Path findPath(const Point& start, const Point& end) = 0;
 
     virtual ~PathFinder();;
 

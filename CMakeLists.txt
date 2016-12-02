@@ -103,14 +103,17 @@ set(SRC
         src/PathFinder.h
         src/AStarPathFinder.cpp
         src/AStarPathFinder.h
-        src/Sector.h
-        src/GridGraph.h
+        src/Grid.h
+        src/GridMapGraph.h
         src/Size.cpp
         src/Size.h
         src/Named.h
         src/Named.cpp
         src/Teacher.cpp
-        src/Teacher.h src/SectorMap.h)
+        src/Teacher.h
+        src/GridMap.h
+        src/Path.cpp
+        src/Path.h)
 
 add_executable(${PROJECT_NAME} ${SRC})
 add_definitions(-D_LINUX)

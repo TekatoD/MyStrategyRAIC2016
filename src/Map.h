@@ -23,7 +23,7 @@ public:
 
     void addEdge(const std::string& start, const std::string& end);
 
-    std::vector<std::pair<Point, double>> getNeighbours(const Point& point) const override ;
+    std::vector<std::pair<Point, double>> getNeighbourVertexes(const Point& point) const override ;
 
     Point getNearestVertex(const Point& point) const override;
 

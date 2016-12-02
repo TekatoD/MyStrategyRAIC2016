@@ -66,7 +66,7 @@ Map::Map() : Graph() {
 
 }
 
-std::vector<std::pair<Point, double>> Map::getNeighbours(const Point& point) const {
+std::vector<std::pair<Point, double>> Map::getNeighbourVertexes(const Point& point) const {
     auto result = std::find_if(mWayPoints.begin(), mWayPoints.end(), [point](const auto& pair){
         return *pair.second == point;
     });

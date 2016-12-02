@@ -69,7 +69,7 @@ std::ostream& operator<<(std::ostream& os, const Point& point) {
 
 
 Point Point::operator+(const Point& other) const {
-    return Point(*this) += other;
+    return Point{*this} += other;
 }
 
 
@@ -81,7 +81,7 @@ const Point& Point::operator+=(const Point& other) {
 
 
 Point Point::operator-(const Point& other) const {
-    return Point(*this) -= other;
+    return Point{*this} -= other;
 }
 
 
@@ -93,7 +93,7 @@ const Point& Point::operator-=(const Point& other) {
 
 
 Point Point::operator*(double value) const {
-    return Point(*this) * value;
+    return Point{*this} *= value;
 }
 
 
@@ -105,7 +105,7 @@ const Point& Point::operator*=(double other) {
 
 
 Point Point::operator/(double value) const {
-    return Point(*this) /= value;
+    return Point{*this} /= value;
 }
 
 

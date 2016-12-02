@@ -8,30 +8,31 @@
 
 #include <vector>
 #include <utility>
+#include <ostream>
 #include "Point.h"
 
 template <class T, size_t W, size_t H>
-class Sector {
+class Grid {
 public:
-    Sector(std::pair<int, int> indexOffset={0, 0})
+    Grid(std::pair<int, int> indexOffset={0, 0})
             : mIndexOffset(indexOffset), mData() { mData.resize(W * H); }
 
-    Sector(const T& defaultValue, std::pair<int, int> indexOffset={0, 0})
+    Grid(const T& defaultValue, std::pair<int, int> indexOffset={0, 0})
             : mIndexOffset(indexOffset), mData(W * H, defaultValue) {}
 
-    Sector(const Sector<T, W, H>& other) = default;
+    Grid(const Grid<T, W, H>& other) = default;
 
-    Sector(Sector<T, W, H>&& other) = default;
+    Grid(Grid<T, W, H>&& other) = default;
 
-    Sector<T, W, H>& operator=(const Sector<T, W, H>& other) = default;
+    Grid<T, W, H>& operator=(const Grid<T, W, H>& other) = default;
 
-    Sector<T, W, H>& operator=(Sector<T, W, H>&& other) = default;
+    Grid<T, W, H>& operator=(Grid<T, W, H>&& other) = default;
 
     T getValue(int x, int y) const { return mData[this->index(x, y)]; }
 
-    T setValue(int x, int y, const T& value) const { return mData[this->index(x, y)] = value; }
+    T setValue(int x, int y, const T& value) { return mData[this->index(x, y)] = value; }
 
-    bool isValid(int x, int y) const {
+    bool isValidIndex(int x, int y) const {
         return    x >= mIndexOffset.first  && x < W + mIndexOffset.first
                && y >= mIndexOffset.second && y < H + mIndexOffset.second;
     }
@@ -44,11 +45,23 @@ public:
         std::fill(mData.begin(), mData.end(), value);
     }
 
+    friend std::ostream& operator<<(std::ostream& os, const Grid& sector) {
+        const auto& offset = sector.getIndexOffset();
+        for (int yi = 0; yi < H; ++yi) {
+            for (int xi = 0; xi < W; ++xi) {
+                os << sector.getValue(xi + offset.first, yi + offset.second);
+                if (xi != W - 1) os << ' ';
+            }
+            os << std::endl;
+        }
+        return os;
+    }
+
+
 private:
     size_t index(int x, int y) const {
         return W * (y - mIndexOffset.first) + x - mIndexOffset.first;
     }
-
 
 private:
     std::pair<int, int> mIndexOffset;
