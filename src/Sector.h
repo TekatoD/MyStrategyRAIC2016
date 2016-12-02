@@ -40,6 +40,10 @@ public:
 
     void setIndexOffset(int x, int y) { mIndexOffset = {x, y}; }
 
+    void fill(const T& value) {
+        std::fill(mData.begin(), mData.end(), value);
+    }
+
 private:
     size_t index(int x, int y) const {
         return W * (y - mIndexOffset.first) + x - mIndexOffset.first;
