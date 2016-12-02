@@ -14,7 +14,7 @@
 #include "LearningAction.h"
 #include "Named.h"
 
-class Behavior : public Named, public Ranked, public Refreshable, NonCopyable {
+class Behavior : public Named, public virtual Ranked, public virtual Refreshable, NonCopyable {
 public:
     void turn();
 

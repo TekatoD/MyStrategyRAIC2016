@@ -12,6 +12,6 @@ template <class T>
 using Ptr = std::shared_ptr<T>;
 
 template <class T, class... Args>
-Ptr<T> share(Args... args) {
+Ptr<T> share(Args&&... args) {
     return std::make_shared<T>(std::forward<Args>(args)...);
 };

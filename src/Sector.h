@@ -19,13 +19,13 @@ public:
     Sector(const T& defaultValue, std::pair<int, int> indexOffset={0, 0})
             : mIndexOffset(indexOffset), mData(W * H, defaultValue) {}
 
-    Sector(const Sector& other) = default;
+    Sector(const Sector<T, W, H>& other) = default;
 
-    Sector(Sector&& other) = default;
+    Sector(Sector<T, W, H>&& other) = default;
 
-    const Sector& operator=(const Sector& other) = default;
+    Sector<T, W, H>& operator=(const Sector<T, W, H>& other) = default;
 
-    const Sector& operator=(Sector&& other) = default;
+    Sector<T, W, H>& operator=(Sector<T, W, H>&& other) = default;
 
     T getValue(int x, int y) const { return mData[this->index(x, y)]; }
 

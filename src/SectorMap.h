@@ -12,7 +12,7 @@
 template <class T, size_t W, size_t H>
 class SectorMap {
 public:
-    SectorMap(const Point& origin, double cellSize, const T& defaultValue, const Point& offset = {0, 0})
+    SectorMap(const Point& origin, double cellSize, const Point& offset = {0, 0}, const T& defaultValue = T())
             : mOrigin(origin), mOffset(offset), mCellSize(cellSize), mDefaultValue(defaultValue) {}
 
     void setCellValue(const Point& point, bool value) {
