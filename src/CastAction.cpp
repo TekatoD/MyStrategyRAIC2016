@@ -74,7 +74,7 @@ void CastAction::castSpellRequest(model::ActionType action, long long int target
 }
 
 
-void CastAction::tryKickStaff(State::Ptr state) noexcept {
+void CastAction::tryKickStaff(Ptr<State> state) noexcept {
     auto& self = state->self;
     auto& move = state->move;
     int remainingTicks = self.getRemainingActionCooldownTicks();
@@ -86,7 +86,7 @@ void CastAction::tryKickStaff(State::Ptr state) noexcept {
 }
 
 
-void CastAction::castProjectile(State::Ptr state) noexcept {
+void CastAction::castProjectile(Ptr<State> state) noexcept {
     auto& self = state->self;
     auto& move = state->move;
     auto& game = state->game;
@@ -120,7 +120,7 @@ void CastAction::castProjectile(State::Ptr state) noexcept {
 }
 
 
-void CastAction::castSpell(State::Ptr state) noexcept {
+void CastAction::castSpell(Ptr<State> state) noexcept {
     auto& self = state->self;
     auto& move = state->move;
     auto& game = state->game;
@@ -143,7 +143,7 @@ void CastAction::castSpell(State::Ptr state) noexcept {
 }
 
 
-bool CastAction::checkSkill(model::SkillType skill, State::Ptr state) noexcept {
+bool CastAction::checkSkill(model::SkillType skill, Ptr<State> state) noexcept {
     auto& self = state->self;
     auto& skills = self.getSkills();
     bool found = std::find(skills.cbegin(), skills.cend(), skill) == skills.cend();

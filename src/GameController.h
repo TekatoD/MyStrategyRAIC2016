@@ -7,35 +7,94 @@
 
 
 #include <set>
-#include <forward_list>
+#include <list>
 #include "NonCopyable.h"
 #include "Behavior.h"
 #include "Situation.h"
 #include "Relationship.h"
 #include "Mechanism.h"
 
+template <class TeacherType>
 class GameController: public Refreshable, NonCopyable {
 public:
-    GameController();
+    GameController() : mTeacher(share<TeacherType>()) {
+        this->addMechanism(mTeacher);
+    }
 
-    void addMechanism(Mechanism::Ptr mechanism);
 
-    void removeMechanism(Mechanism::Ptr mechanism);
+    void addMechanism(Ptr<Mechanism> mechanism) {
+        mMechanismsList.push_back(std::move(mechanism));
+    }
 
-    void addRelationship(Relationship::Ptr relationship);
+    void removeMechanism(Ptr<Mechanism> mechanism) {
+        mMechanismsList.remove(mechanism);
+    }
 
-    void removeRelationship(Relationship::Ptr relationship);
+    void addRelationship(Ptr<Relationship> relationship) {
+        mBehaviorsSet.insert(relationship->getBehavior());
+        mSituationsSet.insert(relationship->getSituation());
+        mRelationshipsSet.insert(std::move(relationship));
+    }
 
-    void update(State::Ptr state) override;
+    void removeRelationship(Ptr<Relationship> relationship) {
+        auto found = mRelationshipsSet.find(relationship);
+        if (found != mRelationshipsSet.end()) {
+            int count;
+            // Try to delete behavior
+            count = 0;
+            auto behavior = (*found)->getBehavior();
+            for (auto&& r : mRelationshipsSet)
+                count += (r->getBehavior() == behavior) ? 1 : 0;
+            if (count == 1) mBehaviorsSet.erase(behavior);
+            // Try to delete situation
+            count = 0;
+            auto situation = (*found)->getSituation();
+            for (auto&& r : mRelationshipsSet)
+                count += (r->getSituation() == situation) ? 1 : 0;
+            if (count == 1) mSituationsSet.erase(situation);
+            // Delete relationship
+            mRelationshipsSet.erase(found);
+        }
+    }
 
-    void turn();
+    void update(Ptr<State> state) override {
+        for (auto&& mechanism : mMechanismsList)
+            mechanism->update(state);
+        for (auto&& behavior : mBehaviorsSet) {
+            behavior->update(state);
+            mTeacher->feedBehavior(behavior);
+        }
+        for (auto&& situation : mSituationsSet) {
+            situation->update(state);
+            mTeacher->feedSituation(situation);
+        }
+    }
+
+
+    void turn() {
+        Ptr<Behavior> behavior = nullptr;
+        double maxFactor = 0.0;
+        for (auto&& relationship : mRelationshipsSet) {
+            mTeacher->feedRelationship(relationship);
+            auto factor = relationship->getFactor();
+            if (factor > maxFactor) {
+                maxFactor = factor;
+                behavior = relationship->getBehavior();
+            }
+        }
+
+        if (behavior != nullptr) {
+            behavior->turn();
+        }
+    }
 
 
 private:
-    std::forward_list<Mechanism::Ptr> mMechanismsList;
-    std::set<Behavior::Ptr> mBehaviorsSet;
-    std::set<Situation::Ptr> mSituationsSet;
-    std::set<Relationship::Ptr> mRelationshipsSet;
+    Ptr<TeacherType> mTeacher;
+    std::list<Ptr<Mechanism>> mMechanismsList;
+    std::set<Ptr<Behavior>> mBehaviorsSet;
+    std::set<Ptr<Situation>> mSituationsSet;
+    std::set<Ptr<Relationship>> mRelationshipsSet;
 };
 
 

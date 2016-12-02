@@ -12,13 +12,14 @@
 #include "WalkingAction.h"
 #include "MessagingAction.h"
 #include "LearningAction.h"
+#include "Named.h"
 
-class Behavior : public Pointer<Behavior>, public Ranked, public Refreshable, NonCopyable {
+class Behavior : public Named, public Ranked, public Refreshable, NonCopyable {
 public:
     void turn();
 
 protected:
-    Behavior() = default;
+    Behavior(const std::string& name) : Named(name) {}
 
 protected:
     MessagingAction mMessagingAction;

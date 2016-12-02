@@ -12,7 +12,7 @@
 #include <queue>
 
 
-AStarPathFinder::AStarPathFinder(Graph::Ptr graph, size_t initialQueueSize)
+AStarPathFinder::AStarPathFinder(Ptr<Graph> graph, size_t initialQueueSize)
         : PathFinder(std::move(graph)), mInitialQueueSize(initialQueueSize) {}
 
 std::forward_list<Point> AStarPathFinder::findPath(const Point& start, const Point& end) {

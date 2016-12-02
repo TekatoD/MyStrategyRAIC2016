@@ -9,6 +9,6 @@
 #include "Pointer.h"
 #include "Refreshable.h"
 
-class Mechanism : public Pointer<Mechanism>, public Refreshable, NonCopyable {
+class Mechanism : public Refreshable, NonCopyable {
 
 };

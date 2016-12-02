@@ -11,7 +11,7 @@
 
 class Refreshable {
 public:
-    virtual void update(State::Ptr state) = 0;
+    virtual void update(Ptr<State> state) = 0;
 
     virtual ~Refreshable() {}
 };

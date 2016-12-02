@@ -1,6 +1,6 @@
 #include "MyStrategy.h"
 
-MyStrategy::MyStrategy() {}
+MyStrategy::MyStrategy() : mInitialized(false) {}
 
 void MyStrategy::move(const model::Wizard& self,
                       const model::World& world,
@@ -9,11 +9,15 @@ void MyStrategy::move(const model::Wizard& self,
     // Create new state object
     auto state = share<State>(std::ref(self), std::ref(world), std::ref(game), std::ref(move));
     // Init controller
-    if (world.getTickIndex() == 0) {
-
-    }
+    if (!mInitialized) this->initialize();
     // Update world
     mGameController.update(state);
     // Move!
     mGameController.turn();
+}
+
+void MyStrategy::initialize() {
+
+    // DO NOT EDIT WHAT'S BELOW!
+    mInitialized = true;
 }

@@ -13,7 +13,7 @@
 #include "NonCopyable.h"
 #include "Pointer.h"
 
-struct State: public Pointer<State>, NonCopyable {
+struct State: NonCopyable {
 public:
     State(const model::Wizard& self, const model::World& world, const model::Game& game, model::Move& move);
 

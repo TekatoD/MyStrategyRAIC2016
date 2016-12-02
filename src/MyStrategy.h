@@ -4,6 +4,7 @@
 #include <mutex>
 #include "Strategy.h"
 #include "GameController.h"
+#include "Teacher.h"
 
 class MyStrategy : public Strategy {
 public:
@@ -11,6 +12,8 @@ public:
 
     void move(const model::Wizard& self, const model::World& world, const model::Game& game, model::Move& move) override;
 
+    void initialize();
 private:
-    GameController mGameController;
+    bool mInitialized;
+    GameController<Teacher> mGameController;
 };

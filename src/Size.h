@@ -12,7 +12,7 @@
 #include <ostream>
 #include "Pointer.h"
 
-class Size : public Pointer<Size> {
+class Size {
 public:
     Size();
 

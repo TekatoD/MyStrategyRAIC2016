@@ -11,7 +11,7 @@
 #include "Point.h"
 
 template <class T, size_t W, size_t H>
-class Sector : public Pointer<Sector<T, W, H>> {
+class Sector {
 public:
     Sector(std::pair<int, int> indexOffset={0, 0})
             : mIndexOffset(indexOffset), mData() { mData.resize(W * H); }

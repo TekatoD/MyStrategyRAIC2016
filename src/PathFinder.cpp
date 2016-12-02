@@ -5,15 +5,15 @@
 #include "PathFinder.h"
 
 
-PathFinder::PathFinder(Graph::Ptr graph) : mGraph(std::move(graph)) { }
+PathFinder::PathFinder(Ptr<Graph> graph) : mGraph(std::move(graph)) { }
 
 
-Graph::Ptr PathFinder::getGraph() const {
+Ptr<Graph> PathFinder::getGraph() const {
     return mGraph;
 }
 
 
-void PathFinder::setGraph(Graph::Ptr graph) {
+void PathFinder::setGraph(Ptr<Graph> graph) {
     mGraph = std::move(graph);
 }
 

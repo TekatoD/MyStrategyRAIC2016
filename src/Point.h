@@ -12,7 +12,7 @@
 #include <ostream>
 #include "Pointer.h"
 
-class Point : public Pointer<Point> {
+class Point {
 public:
     Point();
 

@@ -28,7 +28,7 @@ public:
     void perform() override;
 
 private:
-    std::function<WalkingParameters(State::Ptr)> mPathPlanner;
+    std::function<WalkingParameters(Ptr<State>)> mPathPlanner;
 };
 
 

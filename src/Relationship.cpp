@@ -5,17 +5,21 @@
 
 #include "Relationship.h"
 
-Relationship::Relationship(std::shared_ptr<Situation> situation,
-                           std::shared_ptr<Behavior> behavior,
-                           std::function<float(std::shared_ptr<Situation>, std::shared_ptr<Behavior>)> evaluator)
-        : mSituation(std::move(situation)), mBehavior(std::move(behavior)), mEvaluator(evaluator) {}
+Relationship::Relationship(const std::string& name, Ptr<Situation> situation,
+                           Ptr<Behavior> behavior)
+        : Named(name), mSituation(std::move(situation)), mBehavior(std::move(behavior)) {}
 
 
-Situation::Ptr Relationship::getSituation() const {
+Ptr<Situation> Relationship::getSituation() const {
     return mSituation;
 }
 
 
-Behavior::Ptr Relationship::getBehavior() const {
+Ptr<Behavior> Relationship::getBehavior() const {
     return mBehavior;
+}
+
+double Relationship::getFactor() const {
+    return   mSituation->getProbability() * mSituation->getFactor()
+           * mBehavior->getProbability() * mBehavior->getFactor();
 }

@@ -10,24 +10,20 @@
 #include "Situation.h"
 #include "Behavior.h"
 
-class Relationship: public Pointer<Relationship>, NonCopyable {
+class Relationship: public Named, NonCopyable {
 public:
-    Relationship(Situation::Ptr situation,
-                 Behavior::Ptr behavior,
-                 std::function<float(Situation::Ptr, Behavior::Ptr)> evaluator);
+    Relationship(const std::string& name, Ptr<Situation> situation,
+                 Ptr<Behavior> behavior);
 
-    float getFactor() const {
-        return mEvaluator(mSituation, mBehavior);
-    }
+    double getFactor() const;
 
-    Situation::Ptr getSituation() const;
+    Ptr<Situation> getSituation() const;
 
-    Behavior::Ptr getBehavior() const;
+    Ptr<Behavior> getBehavior() const;
 
 private:
-    Situation::Ptr mSituation;
-    Behavior::Ptr mBehavior;
-    std::function<float(std::shared_ptr<Situation>, std::shared_ptr<Behavior>)> mEvaluator;
+    Ptr<Situation> mSituation;
+    Ptr<Behavior> mBehavior;
 };
 
 

@@ -11,7 +11,11 @@
 #include "Ranked.h"
 #include "Refreshable.h"
 #include "NonCopyable.h"
+#include "Named.h"
 
-class Situation: public Pointer<Situation>, public Ranked, public Refreshable, NonCopyable {};
+class Situation: public Named, public Ranked, public Refreshable, NonCopyable {
+public:
+    Situation(const std::string& name) : Named(name) {}
+};
 
 

@@ -107,7 +107,11 @@ set(SRC
         src/GridGraph.cpp
         src/GridGraph.h
         src/Size.cpp
-        src/Size.h)
+        src/Size.h
+        src/Named.h
+        src/Named.cpp
+        src/Teacher.cpp
+        src/Teacher.h)
 
 add_executable(${PROJECT_NAME} ${SRC})
 add_definitions(-D_LINUX)

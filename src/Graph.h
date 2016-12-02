@@ -8,7 +8,7 @@
 #include "Point.h"
 #include "Pointer.h"
 
-class Graph : public Pointer<Graph> {
+class Graph {
 public:
     Graph() = default;
 

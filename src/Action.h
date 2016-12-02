@@ -8,14 +8,14 @@
 
 #include "Refreshable.h"
 
-class Action : public Pointer<Action>, public Refreshable, NonCopyable {
+class Action: public Refreshable, NonCopyable {
 public:
-    void update(State::Ptr state) override {
+    void update(Ptr<State> state) override {
         mState = state;
     }
 
     virtual void perform() = 0;
 
 protected:
-    State::Ptr mState;
+    Ptr<State> mState;
 };

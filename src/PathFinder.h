@@ -8,20 +8,20 @@
 #include <forward_list>
 #include "Graph.h"
 
-class PathFinder : public Pointer<PathFinder> {
+class PathFinder {
 public:
-    PathFinder(Graph::Ptr graph);
+    PathFinder(Ptr<Graph> graph);
 
-    Graph::Ptr getGraph() const;
+    Ptr<Graph> getGraph() const;
 
-    void setGraph(Graph::Ptr graph);
+    void setGraph(Ptr<Graph> graph);
 
     virtual std::forward_list<Point> findPath(const Point& start, const Point& end) = 0;
 
     virtual ~PathFinder();;
 
 private:
-    Graph::Ptr mGraph;
+    Ptr<Graph> mGraph;
 
 };
 

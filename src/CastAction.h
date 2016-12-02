@@ -34,13 +34,13 @@ private:
 
     inline void castSpellRequest(model::ActionType action, long long targetId = -1) noexcept;
 
-    inline void tryKickStaff(State::Ptr state) noexcept;
+    inline void tryKickStaff(Ptr<State> state) noexcept;
     
-    inline void castProjectile(State::Ptr state) noexcept;
+    inline void castProjectile(Ptr<State> state) noexcept;
 
-    inline void castSpell(State::Ptr state) noexcept;
+    inline void castSpell(Ptr<State> state) noexcept;
 
-    bool checkSkill(model::SkillType skill, State::Ptr state) noexcept;
+    bool checkSkill(model::SkillType skill, Ptr<State> state) noexcept;
 
 private:
     model::ActionType mAction;
