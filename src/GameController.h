@@ -17,7 +17,8 @@
 template <class TeacherType>
 class GameController: public Refreshable, NonCopyable {
 public:
-    GameController() : mTeacher(share<TeacherType>()) {
+    GameController(Ptr<TeacherType> teacher = nullptr)
+            : mTeacher((teacher == nullptr ) ? share<TeacherType>() : teacher) {
         this->addMechanism(mTeacher);
     }
 

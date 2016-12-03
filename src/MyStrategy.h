@@ -12,7 +12,9 @@ public:
 
     void move(const model::Wizard& self, const model::World& world, const model::Game& game, model::Move& move) override;
 
-    void initialize();
+private:
+    void initialize(Ptr<State>);
+
 private:
     bool mInitialized;
     GameController<Teacher> mGameController;

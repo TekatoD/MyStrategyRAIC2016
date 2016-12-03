@@ -21,9 +21,8 @@ public:
 protected:
     Behavior(const std::string& name) : Named(name) {}
 
+    
 protected:
-    MessagingAction mMessagingAction;
-    LearningAction mLearningAction;
     WalkingAction mWalkingAction;
     CastAction mCastAction;
 

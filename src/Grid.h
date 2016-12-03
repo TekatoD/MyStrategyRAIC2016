@@ -57,6 +57,50 @@ public:
         return os;
     }
 
+    Grid<T, W, H>& operator+=(const Grid<T, W, H>& other) {
+        for (int i = 0; i < W * H; ++i) {
+            mData[i] += other.mData[i];
+        }
+        return *this;
+    };
+
+    Grid<T, W, H> operator+(const Grid<T, W, H>& other) const {
+        return Grid<T, W, H>(*this) += other;
+    };
+
+    Grid<T, W, H>& operator-=(const Grid<T, W, H>& other) {
+        for (int i = 0; i < W * H; ++i) {
+            mData[i] -= other.mData[i];
+        }
+        return *this;
+    };
+
+    Grid<T, W, H> operator-(const Grid<T, W, H>& other) const {
+        return Grid<T, W, H>(*this) -= other;
+    };
+
+    Grid<T, W, H>& operator*=(const Grid<T, W, H>& other) {
+        for (int i = 0; i < W * H; ++i) {
+            mData[i] *= other.mData[i];
+        }
+        return *this;
+    };
+
+    Grid<T, W, H> operator*(const Grid<T, W, H>& other) const {
+        return Grid<T, W, H>(*this) *= other;
+    };
+
+    Grid<T, W, H>& operator/=(const Grid<T, W, H>& other) {
+        for (int i = 0; i < W * H; ++i) {
+            mData[i] /= other.mData[i];
+        }
+        return *this;
+    };
+
+    Grid<T, W, H> operator/(const Grid<T, W, H>& other) const {
+        return Grid<T, W, H>(*this) /= other;
+    };
+
 
 private:
     size_t index(int x, int y) const {

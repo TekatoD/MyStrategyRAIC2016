@@ -100,8 +100,6 @@ public:
 
     void setOffset(const Point& offset) {
         mOffset = offset;
-//        mGrid.setIndexOffset((int) std::round(offset.getX() / mCellSize),
-//                             (int) std::round(offset.getY() / mCellSize));
     }
 
     Point normalize(const Point& point) const {
@@ -179,6 +177,42 @@ public:
         return os;
     }
 
+
+    GridMap<T, W, H>& operator+=(const GridMap<T, W, H>& other) {
+        mGrid += other.mGrid;
+        return *this;
+    };
+
+    GridMap<T, W, H> operator+(const GridMap<T, W, H>& other) const {
+        return GridMap<T, W, H>(*this) += other;
+    };
+
+    GridMap<T, W, H>& operator-=(const GridMap<T, W, H>& other) {
+        mGrid -= other.mGrid;
+        return *this;
+    };
+
+    GridMap<T, W, H> operator-(const GridMap<T, W, H>& other) const {
+        return GridMap<T, W, H>(*this) -= other;
+    };
+
+    GridMap<T, W, H>& operator*=(const GridMap<T, W, H>& other) {
+        mGrid *= other.mGrid;
+        return *this;
+    };
+
+    GridMap<T, W, H> operator*(const GridMap<T, W, H>& other) const {
+        return GridMap<T, W, H>(*this) *= other;
+    };
+
+    GridMap<T, W, H>& operator/=(const GridMap<T, W, H>& other) {
+        mGrid /= other.mGrid;
+        return *this;
+    };
+
+    GridMap<T, W, H> operator/(const GridMap<T, W, H>& other) const {
+        return GridMap<T, W, H>(*this) /= other;
+    };
 
 private:
     inline double normalize(double value, double lower, double upper) const {
