@@ -75,7 +75,6 @@ set(SRC
         src/Behavior.cpp
         src/Behavior.h
         src/NonCopyable.h
-        src/GameController.cpp
         src/GameController.h
         src/Relationship.cpp
         src/Relationship.h
@@ -113,9 +112,13 @@ set(SRC
         src/Teacher.h
         src/GridMap.h
         src/Path.cpp
-        src/Path.h)
+        src/Path.h
+        src/VectorProxy.h
+        src/ObstaclesGridMaker.h
+        src/WorldFilter.cpp
+        src/WorldFilter.h)
 
 add_executable(${PROJECT_NAME} ${SRC})
-add_definitions(-D_LINUX)
+add_definitions(-D_LINUX -D__DEBUG__)
 
 

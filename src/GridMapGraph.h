@@ -14,9 +14,9 @@
 template <size_t W, size_t H>
 class GridMapGraph : public GridMap<int, W, H>, public virtual Graph {
 public:
-    GridMapGraph(const Point& origin, double cellSize, const Point& offset = {0.0, 0.0}, int obstacle = 0)
-            : GridMap<int, W, H>(origin, cellSize, offset, obstacle) {
-        this->reset();
+    GridMapGraph(const Point& origin, double cellSize, const Point& offset = {0.0, 0.0})
+            : GridMap<int, W, H>(origin, cellSize, offset, 0) {
+        this->clear();
     }
 
     std::vector<std::pair<Point, double>> getNeighbourVertexes(const Point& point) const override {
@@ -38,7 +38,7 @@ public:
                 int cy = y + yoffset;
                 if (!this->isValidIndex(cx, cy)) continue;
                 auto value = this->getCellValueByIndex(cx, cy);
-                if (value != this->getDefaultValue()) {
+                if (value > this->getDefaultValue()) {
                     double path = (cx == cy) ? z * value : value;
                     neighbours.push_back({this->getGlobalPosition(cx, cy), path});
                 }
@@ -49,5 +49,9 @@ public:
 
     Point getNearestVertex(const Point& point) const override {
         return this->getNearestPoint(point);
+    }
+
+    void clear() {
+        this->fill(1);
     }
 };

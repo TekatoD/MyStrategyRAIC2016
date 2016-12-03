@@ -7,8 +7,6 @@
 
 
 void Behavior::turn() {
-    mMessagingAction.perform();
-    mLearningAction.perform();
     mWalkingAction.perform();
     mCastAction.perform();
 }

@@ -7,7 +7,7 @@
 
 #include "Point.h"
 #include "Graph.h"
-#include <unordered_map>
+#include <unordered_set>
 #include <map>
 #include <forward_list>
 #include <memory>
@@ -19,28 +19,29 @@ public:
 
     Map();
 
-    void addPoint(const std::string& name, Point point);
+    void addPoint(const Point& point);
 
-    void addEdge(const std::string& start, const std::string& end);
+    void deletePoint(const Point& point);
+
+    void addEdge(Point start, Point end, bool findNearest = false);
 
     std::vector<std::pair<Point, double>> getNeighbourVertexes(const Point& point) const override ;
 
     Point getNearestVertex(const Point& point) const override;
 
-    Point getPointByName(const std::string& point) const;
+    bool isContains(const Point& point) const;
+
+
 private:
-
-
-
     struct Edge {
-        Edge(const std::string& start, const std::string& end, double distance) :
+        Edge(const Point& start, const Point& end, double distance) :
                 start(start), end(end), distance(distance) {}
 
-        std::string start;
-        std::string end;
+        Point start;
+        Point end;
         double distance;
     };
-    std::unordered_map<std::string, std::shared_ptr<Point>> mWayPoints;
+    std::unordered_set<Point> mWaypoints;
     std::forward_list<Edge> mEdges;
 };
 

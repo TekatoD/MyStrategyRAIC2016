@@ -1,6 +1,7 @@
 #include "Runner.h"
 
 #include <vector>
+#include <thread>
 
 #include "src/MyStrategy.h"
 
@@ -8,6 +9,7 @@ using namespace model;
 using namespace std;
 
 int main(int argc, char* argv[]) {
+    std::this_thread::sleep_for(5s);
     if (argc == 4) {
         Runner runner(argv[1], argv[2], argv[3]);
         runner.run();
