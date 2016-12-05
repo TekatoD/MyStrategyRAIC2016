@@ -40,18 +40,20 @@ public:
     void removeRelationship(Ptr<Relationship> relationship) {
         auto found = mRelationshipsSet.find(relationship);
         if (found != mRelationshipsSet.end()) {
-            int count;
+            long count;
             // Try to delete behavior
-            count = 0;
             auto behavior = (*found)->getBehavior();
-            for (auto&& r : mRelationshipsSet)
-                count += (r->getBehavior() == behavior) ? 1 : 0;
+            count = std::count_if(mRelationshipsSet.cbegin(), mRelationshipsSet.cend(),
+                                  [behavior](const Ptr<Relationship>& r) {
+                                      return r->getBehavior() == behavior;
+                                  });
             if (count == 1) mBehaviorsSet.erase(behavior);
             // Try to delete situation
-            count = 0;
             auto situation = (*found)->getSituation();
-            for (auto&& r : mRelationshipsSet)
-                count += (r->getSituation() == situation) ? 1 : 0;
+            count = std::count_if(mRelationshipsSet.cbegin(), mRelationshipsSet.cend(),
+                                  [situation](const Ptr<Relationship>& r) {
+                                      return r->getSituation() == situation);
+                                  });
             if (count == 1) mSituationsSet.erase(situation);
             // Delete relationship
             mRelationshipsSet.erase(found);
@@ -61,16 +63,24 @@ public:
     void update(Ptr<State> state) override {
         for (auto&& mechanism : mMechanismsList)
             mechanism->update(state);
+
         for (auto&& behavior : mBehaviorsSet) {
             behavior->update(state);
-            mTeacher->feedBehavior(behavior);
+            if (behavior->isDisabled()) {
+                this->removeBehavior(behavior);
+            } else {
+                mTeacher->feedBehavior(behavior);
+            }
         }
         for (auto&& situation : mSituationsSet) {
             situation->update(state);
-            mTeacher->feedSituation(situation);
+            if (situation->isDisabled()) {
+                this->removeSituation(situation);
+            } else {
+                mTeacher->feedBehavior(situation);
+            }
         }
     }
-
 
     void turn() {
         Ptr<Behavior> behavior = nullptr;
@@ -86,6 +96,28 @@ public:
 
         if (behavior != nullptr) {
             behavior->turn();
+        }
+    }
+
+
+private:
+    void removeBehavior(Ptr<Behavior> behavior) {
+        auto toRemove = std::find_if(mRelationshipsSet.begin(), mRelationshipsSet.end(),
+                                       [behavior](const Relationship& relationship) {
+                                           return behavior == relationship.getBehavior();
+                                       });
+        for (auto& it = toRemove; it != mRelationshipsSet.end(); ++it) {
+            this->removeRelationship(*it);
+        }
+    }
+
+    void removeSituation(Ptr<Situation> situation) {
+        auto toRemove = std::find_if(mRelationshipsSet.begin(), mRelationshipsSet.end(),
+                                     [situation](const Relationship& relationship) {
+                                         return situation == relationship.getSituation();
+                                     });
+        for (auto& it = toRemove; it != mRelationshipsSet.end(); ++it) {
+            this->removeRelationship(*it);
         }
     }
 

@@ -1,9 +1,14 @@
 #include <iomanip>
+#include <stdlib.h>
 #include "MyStrategy.h"
-#include "Map.h"
+#include "MapGraph.h"
 #include "WorldFilter.h"
 #include "ObstaclesGridMaker.h"
 #include "Log.h"
+#include "Walker.h"
+#include "AStarPathFinder.h"
+#include "CallbackSituation.h"
+#include "BonusExistsSituation.h"
 
 
 MyStrategy::MyStrategy() : mInitialized(false) {
@@ -32,6 +37,7 @@ void MyStrategy::move(const model::Wizard& self,
                << 1.0 / (endTimePoint - startTimePoint).count();
 }
 
+
 void MyStrategy::initialize(Ptr<State> state) {
     Log(DEBUG) << "Initialization started";
     // Create aliases
@@ -40,6 +46,8 @@ void MyStrategy::initialize(Ptr<State> state) {
     auto& move = state->move;
     auto& world = state->world;
     // Key positions
+    const auto posBonusBot =      Point(1200.0, 1200.0);
+    const auto posBonusTop =      Point(2800.0, 2800.0);
     const auto posBaseTop =       Point{3600.0, 400.0};
     const auto posBaseBot =       Point{400.0, 3600.0};
     const auto posTowerLeft1 =    Point{50.0, 2693.2577778083373};
@@ -75,7 +83,7 @@ void MyStrategy::initialize(Ptr<State> state) {
     const auto wpTowerTop2 = Point(1687.8740025771563, 50.0 + (52 + 50));
     const auto wpCenter = Point(2000.0, 2000.0);
     // Initialize map
-    Ptr<Map> map = share<Map>();
+    Ptr<MapGraph> map = share<MapGraph>();
     map->addEdge(wpBaseBot, wpTowerLeft1);
     map->addEdge(wpTowerLeft1, wpTowerLeft2);
     map->addEdge(wpTowerLeft2, wpCornerTop);
@@ -101,12 +109,18 @@ void MyStrategy::initialize(Ptr<State> state) {
     // Define constants
     const double wizardSize = game.getWizardRadius();
     const size_t sectorSize = 15;
-    const double filterRadius = std::sqrt(sectorSize * sectorSize * 2);
+    const double filterRadius = std::sqrt(sectorSize * sectorSize * wizardSize * wizardSize * 2);
     // Initialize mechanisms
     auto worldFilter = share<WorldFilter>(filterRadius);
     auto obstaclesGridMaker = share<ObstaclesGridMaker<sectorSize>>(worldFilter);
+    auto walker = share<Walker<sectorSize>>(map, obstaclesGridMaker,
+                                            share<AStarPathFinder>(), share<AStarPathFinder>());
     mGameController.addMechanism(worldFilter);
     mGameController.addMechanism(obstaclesGridMaker);
+    mGameController.addMechanism(walker);
+
+    auto situationTopBonusExists = share<BonusExistsSituation>("top_bonus_exists", posBonusTop);
+    auto situationBotBonusExists = share<BonusExistsSituation>("bot_bonus_exists", posBonusBot);
 
     // DO NOT EDIT WHAT'S BELOW!
     mInitialized = true;

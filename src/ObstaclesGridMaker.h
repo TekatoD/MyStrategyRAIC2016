@@ -31,9 +31,13 @@ public:
 private:
     void updateGraph() const {
         if (!mUpdated) {
+//            if (mState == nullptr) return;
             mUpdated = true;
-            auto& me = mState->self;
-            mGraph = share<GridMapGraph<W, W>>(Point{me}, 2.0 * me.getRadius(), Point{-W / 2, -W / 2});
+            auto& self = mState->self;
+            auto radius = self.getRadius();
+            const double w = W;
+            mGraph = share<GridMapGraph<W, W>>(Point{self}, 2.0 * radius,
+                                               Point{ -w * radius, -w * radius});
 
             mFilter->update(mState);
             this->applyUnits(mFilter->getWizards());
@@ -45,8 +49,16 @@ private:
 
     template <class T>
     void applyUnits(VectorProxy<T> proxy) const {
-        size_t size = proxy.getSize();
-        for (size_t i = 0; i < size; ++i) this->drawCircle({proxy[i]}, proxy[i].getRadius(), 0);
+        auto& me = mState->self;
+        for (auto&& item : proxy) {
+            if (me.getId() == item->getId()) continue;
+            auto radius = item->getRadius();
+            if (radius / mGraph->getCellSize() <= 1.0) {
+                mGraph->setCellValue({*item}, 0);
+            } else {
+                this->drawCircle({*item}, radius, 0);
+            }
+        }
     }
 
     void drawCircle(const Point& center, double radius, int value) const {

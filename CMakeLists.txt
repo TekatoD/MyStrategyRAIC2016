@@ -82,8 +82,8 @@ set(SRC
         src/Point.h
         src/Point.cpp
         src/Action.h
-        src/Map.cpp
-        src/Map.h
+        src/MapGraph.cpp
+        src/MapGraph.h
         src/Log.cpp
         src/Log.h
         src/Mechanism.h
@@ -116,7 +116,18 @@ set(SRC
         src/VectorProxy.h
         src/ObstaclesGridMaker.h
         src/WorldFilter.cpp
-        src/WorldFilter.h)
+        src/WorldFilter.h
+        src/Walker.h
+        src/CallbackBehavior.cpp
+        src/CallbackBehavior.h
+        src/CallbackSituation.cpp
+        src/CallbackSituation.h
+        src/BonusExistsSituation.cpp
+        src/BonusExistsSituation.h
+        src/BuildingUnderAttackSituation.cpp
+        src/BuildingUnderAttackSituation.h
+        src/SelfDisabler.cpp
+        src/SelfDisabler.h)
 
 add_executable(${PROJECT_NAME} ${SRC})
 add_definitions(-D_LINUX -D__DEBUG__)

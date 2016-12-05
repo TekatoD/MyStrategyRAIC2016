@@ -4,7 +4,6 @@
  */
 
 #include "WorldFilter.h"
-#include "Point.h"
 
 
 void WorldFilter::update(Ptr<State> state) {

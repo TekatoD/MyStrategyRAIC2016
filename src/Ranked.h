@@ -8,13 +8,46 @@
 
 class Ranked {
 public:
-    virtual void setProbability(float value) = 0;
+    void setProbability(double value) {
+        if (value < 0.0) {
+            value = 0.0;
+        } else if (value >= 1.0) {
+            value = 1.0;
+        }
+        mProbability = value;
+    }
 
-    virtual float getProbability() const = 0;
+    double getProbability() const {
 
-    virtual void setFactor(float value) = 0;
+        return (!mInverseProbability) ? mProbability : 1.0 - mProbability;
+    }
 
-    virtual float getFactor() const = 0;
+    void setFactor(float value) {
+        mFactor = value;
+    }
 
-    virtual ~Ranked() {}
+    double getFactor() const {
+        return mFactor;
+    }
+
+    bool isInverseProbability() const {
+        return mInverseProbability;
+    }
+
+    void setInverseProbability(bool inverseProbability) {
+        mInverseProbability = inverseProbability;
+    }
+
+
+protected:
+    Ranked()
+            : mProbability(0.0), mFactor(1.0), mInverseProbability(false) {}
+
+    Ranked(double probability, double factor = 1.0, bool inverseProbability = false)
+            : mProbability(probability), mFactor(factor), mInverseProbability(inverseProbability) {}
+
+private:
+    double mProbability;
+    double mFactor;
+    bool mInverseProbability;
 };

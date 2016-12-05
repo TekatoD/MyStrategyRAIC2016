@@ -14,10 +14,10 @@
 #include <limits>
 #include <algorithm>
 
-class Map : public Graph {
+class MapGraph : public Graph {
 public:
 
-    Map();
+    MapGraph();
 
     void addPoint(const Point& point);
 

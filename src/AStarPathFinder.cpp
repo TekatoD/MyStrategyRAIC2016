@@ -98,3 +98,7 @@ void AStarPathFinder::setInitialQueueSize(size_t initialQueueSize) {
 }
 
 
+AStarPathFinder::AStarPathFinder(size_t initialQueueSize)
+        : PathFinder(nullptr), mInitialQueueSize(initialQueueSize) {}
+
+

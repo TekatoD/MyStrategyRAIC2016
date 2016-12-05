@@ -9,7 +9,7 @@ using namespace model;
 using namespace std;
 
 int main(int argc, char* argv[]) {
-    std::this_thread::sleep_for(5s);
+    std::this_thread::sleep_for(3s);
     if (argc == 4) {
         Runner runner(argv[1], argv[2], argv[3]);
         runner.run();

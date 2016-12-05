@@ -40,7 +40,7 @@ public:
 
     double getDistanceTo(double x, double y) const;
 
-    bool inCircle(const Point& point, double radius);
+    bool inCircle(const Point& point, double radius) const;
 
     template <class T>
     Point operator+(const T& other) {

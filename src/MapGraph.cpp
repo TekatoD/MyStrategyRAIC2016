@@ -4,21 +4,21 @@
  */
 
 
-#include "Map.h"
+#include "MapGraph.h"
 
 
-Map::Map()
+MapGraph::MapGraph()
         : Graph() {}
 
-void Map::addPoint(const Point& point) {
+void MapGraph::addPoint(const Point& point) {
     mWaypoints.insert(point);
 }
 
-void Map::deletePoint(const Point& point) {
+void MapGraph::deletePoint(const Point& point) {
     mWaypoints.erase(point);
 }
 
-void Map::addEdge(Point start, Point end, bool findNearest) {
+void MapGraph::addEdge(Point start, Point end, bool findNearest) {
     if (mWaypoints.find(start) == mWaypoints.end()) {
         if (findNearest) {
             start = this->getNearestVertex(start);
@@ -36,7 +36,7 @@ void Map::addEdge(Point start, Point end, bool findNearest) {
     mEdges.push_front({start, end, start.getDistanceTo(end)});
 }
 
-std::vector<std::pair<Point, double>> Map::getNeighbourVertexes(const Point& point) const {
+std::vector<std::pair<Point, double>> MapGraph::getNeighbourVertexes(const Point& point) const {
     auto found = mWaypoints.find(point);
     if (found == mWaypoints.end()) {
         return std::vector<std::pair<Point, double>>{};
@@ -53,7 +53,7 @@ std::vector<std::pair<Point, double>> Map::getNeighbourVertexes(const Point& poi
     return std::move(neighbours);
 }
 
-Point Map::getNearestVertex(const Point& point) const {
+Point MapGraph::getNearestVertex(const Point& point) const {
     auto result = std::min_element(mWaypoints.begin(), mWaypoints.end(),
                                    [&point](const auto& p1, const auto& p2){
         return p1.getDistanceTo(point) < p2.getDistanceTo(point);
@@ -61,7 +61,7 @@ Point Map::getNearestVertex(const Point& point) const {
     return *result;
 }
 
-bool Map::isContains(const Point& point) const {
+bool MapGraph::isContains(const Point& point) const {
     return mWaypoints.find(point) != mWaypoints.end();
 
 }

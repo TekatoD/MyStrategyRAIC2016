@@ -9,6 +9,8 @@
 
 class AStarPathFinder : public PathFinder {
 public:
+    AStarPathFinder(size_t initialQueueSize = 32);
+
     AStarPathFinder(Ptr<Graph> graph, size_t initialQueueSize = 32);
 
     Path findPath(const Point& start, const Point& end) override;

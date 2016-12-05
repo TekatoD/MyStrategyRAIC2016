@@ -43,12 +43,11 @@ private:
 
     template <class T>
     void updateProxy(const std::vector<T>& container, VectorProxy<T>& proxy) const {
-        proxy.setContainer(container);
-        size_t size = container.size();
+        proxy.clear();
         auto me = Point(mState->self);
-        for (int i = 0; i < size; ++i)
-            if (me.inCircle(container[i], mRadius + container[i].getRadius()))
-                mBonuses.addIndex(i);
+        for (auto&& item : container)
+            if (me.inCircle(item, mRadius + item.getRadius()))
+                proxy.push_back(&item);
     }
 
 private:

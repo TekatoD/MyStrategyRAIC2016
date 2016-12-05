@@ -55,7 +55,7 @@ bool Point::operator!=(const Point &rhs) const {
     return !(rhs == *this);
 }
 
-bool Point::inCircle(const Point& point, double radius) {
+bool Point::inCircle(const Point& point, double radius) const {
     double dx = mX - point.getX();
     double dy = mY - point.getY();
     return dx * dx + dy * dy <= radius * radius;

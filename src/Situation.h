@@ -12,8 +12,9 @@
 #include "Refreshable.h"
 #include "NonCopyable.h"
 #include "Named.h"
+#include "SelfDisabler.h"
 
-class Situation: public Named, public Ranked, public Refreshable, NonCopyable {
+class Situation: public SelfDisabler, public Named, public Ranked, public Refreshable, NonCopyable {
 public:
     Situation(const std::string& name) : Named(name) {}
 };
