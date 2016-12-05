@@ -6,15 +6,15 @@
 #include "SelfDisabler.h"
 
 
-SelfDisabler::SelfDisabler()
+SelfDisabler::SelfDisabler() noexcept
         : mDisabled(false) {}
 
 
-bool SelfDisabler::isDisabled() const {
+bool SelfDisabler::isDisabled() const noexcept {
     return mDisabled;
 }
 
 
-void SelfDisabler::disable() {
+void SelfDisabler::disable() noexcept {
     mDisabled = true;
 }

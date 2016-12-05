@@ -28,7 +28,7 @@ void BuildingUnderAttackSituation::update(Ptr<State> state) {
     auto& self = state->self;
     auto faction = self.getFaction();
     auto& minions = world.getMinions();
-    if (std::find_if(minions.cbegin(), minions.cend(), [this](const auto& m) {
+    if (std::find_if(minions.cbegin(), minions.cend(), [this, faction](const auto& m) {
         return  m.getFaction() != faction && mPosition.inCircle({m}, mRadius);
     }) == minions.cend()) {
         this->setProbability(0.0);

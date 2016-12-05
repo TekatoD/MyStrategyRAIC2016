@@ -19,7 +19,8 @@ public:
     Walker(Ptr<MapGraph> map, Ptr<ObstaclesGridMaker<W>> maker,
            Ptr<PathFinder> globalFinder, Ptr<PathFinder> localFinder)
             : mGridMaker(std::move(maker)),
-              mGlobalFinder(std::move(globalFinder)), mLocalFinder(std::move(localFinder)) {
+              mGlobalFinder(std::move(globalFinder)),
+              mLocalFinder(std::move(localFinder)) {
         mGlobalFinder->setGraph(map);
     }
 

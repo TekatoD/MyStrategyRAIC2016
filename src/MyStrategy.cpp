@@ -1,5 +1,4 @@
 #include <iomanip>
-#include <stdlib.h>
 #include "MyStrategy.h"
 #include "MapGraph.h"
 #include "WorldFilter.h"
@@ -7,7 +6,6 @@
 #include "Log.h"
 #include "Walker.h"
 #include "AStarPathFinder.h"
-#include "CallbackSituation.h"
 #include "BonusExistsSituation.h"
 
 
@@ -113,8 +111,13 @@ void MyStrategy::initialize(Ptr<State> state) {
     // Initialize mechanisms
     auto worldFilter = share<WorldFilter>(filterRadius);
     auto obstaclesGridMaker = share<ObstaclesGridMaker<sectorSize>>(worldFilter);
-    auto walker = share<Walker<sectorSize>>(map, obstaclesGridMaker,
-                                            share<AStarPathFinder>(), share<AStarPathFinder>());
+    auto walker = share<Walker<sectorSize>>(
+            map,
+            obstaclesGridMaker,
+            share<AStarPathFinder>(),
+            share<AStarPathFinder>()
+    );
+
     mGameController.addMechanism(worldFilter);
     mGameController.addMechanism(obstaclesGridMaker);
     mGameController.addMechanism(walker);

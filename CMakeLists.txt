@@ -4,7 +4,7 @@ project(MyStrategy)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-Wno-unknown-pragmas -Wall -static -fno-optimize-sibling-calls -fno-strict-aliasing")
+set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-Wno-unknown-pragmas -static -fno-optimize-sibling-calls -fno-strict-aliasing")
 
 set(SRC
         csimplesocket/ActiveSocket.cpp

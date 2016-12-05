@@ -12,6 +12,9 @@
 #include <queue>
 
 
+const size_t AStarPathFinder::DEFAULT_QUEUE_SIZE = 32;
+
+
 AStarPathFinder::AStarPathFinder(Ptr<Graph> graph, size_t initialQueueSize)
         : PathFinder(std::move(graph)), mInitialQueueSize(initialQueueSize) {}
 
@@ -98,7 +101,7 @@ void AStarPathFinder::setInitialQueueSize(size_t initialQueueSize) {
 }
 
 
-AStarPathFinder::AStarPathFinder(size_t initialQueueSize)
-        : PathFinder(nullptr), mInitialQueueSize(initialQueueSize) {}
+AStarPathFinder::AStarPathFinder()
+        : PathFinder(nullptr), mInitialQueueSize(DEFAULT_QUEUE_SIZE) {}
 
 
