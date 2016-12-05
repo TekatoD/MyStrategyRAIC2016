@@ -108,8 +108,8 @@ set(SRC
         src/Size.h
         src/Named.h
         src/Named.cpp
-        src/Teacher.cpp
-        src/Teacher.h
+        src/BigTeacher.cpp
+        src/BigTeacher.h
         src/GridMap.h
         src/Path.cpp
         src/Path.h
