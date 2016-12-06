@@ -11,6 +11,7 @@
 #include "PathFinder.h"
 #include "Mechanism.h"
 #include "ObstaclesGridMaker.h"
+#include "Log.h"
 
 
 template <size_t W>

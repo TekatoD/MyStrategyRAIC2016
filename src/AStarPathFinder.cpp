@@ -43,6 +43,9 @@ Path AStarPathFinder::findPath(const Point& start, const Point& end) {
         auto& pos = current.first;
         dist =  current.second;
         auto contains = waypoints.find(pos);
+        if (pos.getDistanceTo(end) < nearest.getDistanceTo(end)) {
+            nearest = pos;
+        }
         if (contains == waypoints.cend()) {
             waypoints.emplace(current);
         } else if (contains->second > dist) {
@@ -50,9 +53,7 @@ Path AStarPathFinder::findPath(const Point& start, const Point& end) {
         } else {
             continue;
         }
-        if (pos.getDistanceTo(end) < nearest.getDistanceTo(end)) {
-            nearest = pos;
-        }
+
 
         if (pos == end) {
             found = true;

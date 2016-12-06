@@ -19,6 +19,10 @@ public:
             : Behavior(name), mPosition(position), mSectorSize(sectorSize), mBerserkMode(berserkMode),
               mHoldPositionRequired(holdPositionRequired), mWalker(std::move(walker)), mWeaponry(std::move(weaponry)) {
         this->setFactor(factor);
+        auto& walkAction = this->getWalkingAction();
+        walkAction.setPathPlanner([this](Ptr<State>) {
+            return WalkingParameters(1.0, mTargetPoint, mTrackingPoint);
+        });
     }
 
     void update(Ptr<State> state) override {
@@ -27,7 +31,12 @@ public:
         auto& self = state->self;
         if (!mBerserkMode) {
             if (mHoldPositionRequired || !mPosition.inCircle({self}, mSectorSize)) {
-                mWalker->findPath({self}, {mPosition});
+                Path path = mWalker->findPath({self}, {mPosition});
+                if (!path.isFinished()) {
+                    auto target = path.pop();
+                    mTargetPoint = target;
+                    mTrackingPoint = target;
+                }
             } else {
                 this->protectPosition(state);
             }
@@ -48,6 +57,8 @@ private:
     bool mHoldPositionRequired;
     Ptr<Walker<W>> mWalker;
     Ptr<Weaponry> mWeaponry;
+    Point mTrackingPoint;
+    Point mTargetPoint;
 
 };
 

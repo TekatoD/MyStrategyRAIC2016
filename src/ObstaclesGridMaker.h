@@ -9,6 +9,7 @@
 #include "Mechanism.h"
 #include "GridMapGraph.h"
 #include "WorldFilter.h"
+#include "Log.h"
 
 template <size_t W>
 class ObstaclesGridMaker : public Mechanism {
@@ -35,9 +36,8 @@ private:
             mUpdated = true;
             auto& self = mState->self;
             auto radius = self.getRadius();
-            const double w = W;
-            mGraph = share<GridMapGraph<W, W>>(Point{self}, 2.0 * radius,
-                                               Point{ -w * radius, -w * radius});
+            const double w = W - 1;
+            mGraph = share<GridMapGraph<W, W>>(Point{self}, 2.0 * radius, Point{-w * radius, -w * radius});
 
             mFilter->update(mState);
             this->applyUnits(mFilter->getWizards());

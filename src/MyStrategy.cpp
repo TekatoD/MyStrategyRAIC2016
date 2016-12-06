@@ -28,8 +28,10 @@ void MyStrategy::move(const model::Wizard& self,
     // Init controller
     if (!mInitialized) this->initialize(state);
     // Update world
+    Log(DEBUG) << "Updating controller...";
     mGameController.update(state);
     // Move!
+    Log(DEBUG) << "Performing turn...";
     mGameController.turn();
     auto endTimePoint = std::chrono::steady_clock::now();
     Log(DEBUG) << "Tick" << world.getTickIndex() << "completed for"
