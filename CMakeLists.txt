@@ -127,7 +127,11 @@ set(SRC
         src/BuildingUnderAttackSituation.cpp
         src/BuildingUnderAttackSituation.h
         src/SelfDisabler.cpp
-        src/SelfDisabler.h)
+        src/SelfDisabler.h
+        src/Clusterer.cpp
+        src/Clusterer.h
+        src/MinionCluster.cpp
+        src/MinionCluster.h)
 
 add_executable(${PROJECT_NAME} ${SRC})
 add_definitions(-D_LINUX -D__DEBUG__)
