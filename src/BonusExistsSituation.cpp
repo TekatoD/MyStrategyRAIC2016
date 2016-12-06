@@ -25,7 +25,8 @@ void BonusExistsSituation::update(Ptr<State> state) {
     int count = tick / period;
     int rest = tick % period;
     if (count > 0) {
-        probability = (rest != 0) ? 1.0 / rest : 1.0;
+        auto temp = (tick - period / 2.0) / period;
+        probability = temp * temp;
     }
     this->setProbability(probability);
 }
