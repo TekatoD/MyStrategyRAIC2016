@@ -20,7 +20,7 @@ public:
 
     double getThreshold() const;
 
-    long long double getId() const;
+    long long getId() const;
 
     double getMaxHeals() const;
 

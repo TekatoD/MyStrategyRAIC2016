@@ -33,7 +33,7 @@ void DamagedBuildingSituation::update(Ptr<State> state) {
     auto& minions = world.getMinions();
     auto& wizards = world.getWizards();
     auto found = std::find_if(buildings.cbegin(), buildings.cend(), [this](const model::Building& building) {
-        return mPosition.inCircle({buildings}, 1.0);
+        return mPosition.inCircle({building}, 1.0);
     });
 
     if (found != buildings.cend()) {
@@ -41,13 +41,14 @@ void DamagedBuildingSituation::update(Ptr<State> state) {
     } else {
         bool isMinionsSee = std::find_if(minions.cbegin(), minions.cend(), [this, &game, &self](const model::Minion& minion) {
             return    minion.getFaction() == self.getFaction()
-                   && mPosition.inCircle({minions}, game.getMinionVisionRange());
+                   && mPosition.inCircle({minion}, game.getMinionVisionRange());
         }) != minions.cend();
 
-        bool isWizardsSee = std::find_if(wizards.cbegin(), wizards.cend(), [this, &game](const model::Wizard& wizard) {
+        bool isWizardsSee = std::find_if(wizards.cbegin(), wizards.cend(), [this, &game, &self](const model::Wizard& wizard) {
             return wizard.getFaction() == self.getFaction()
-                   && mPosition.inCircle({minions}, game.getWizardVisionRange());
-        }) != minions.cend();
+                   && mPosition.inCircle({wizard}, game.getWizardVisionRange());
+        }) != wizards.cend();
+
         if (isMinionsSee || isWizardsSee) {
             this->disable();
         }

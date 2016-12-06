@@ -42,7 +42,7 @@ double DamagedWizardSituation::getThreshold() const {
     return mThreshold;
 }
 
-long long double DamagedWizardSituation::getId() const {
+long long DamagedWizardSituation::getId() const {
     return mId;
 }
 
