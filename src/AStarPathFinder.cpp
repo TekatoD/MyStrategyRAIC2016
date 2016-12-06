@@ -18,10 +18,14 @@ const size_t AStarPathFinder::DEFAULT_QUEUE_SIZE = 32;
 AStarPathFinder::AStarPathFinder(Ptr<Graph> graph, size_t initialQueueSize)
         : PathFinder(std::move(graph)), mInitialQueueSize(initialQueueSize) {}
 
-Path AStarPathFinder::findPath(const Point& start, const Point& end) {
+Path AStarPathFinder::findPath(const Point& from, const Point& to) {
+    auto graph = this->getGraph();
+
+    auto start = graph->getNearestVertex(from);
+    auto end = graph->getNearestVertex(to);
     using Waypoint = std::pair<Point, double>;
     if (start == end) {
-        return Path{start};
+        return Path{};
     }
     double dist = 0;
     auto comparator = [&end](const Waypoint& first, const Waypoint& second) -> bool {
@@ -35,7 +39,6 @@ Path AStarPathFinder::findPath(const Point& start, const Point& end) {
     std::unordered_map<Point, double> waypoints;
     waypoints.max_load_factor(0.8);
     bool found = false;
-    auto graph = this->getGraph();
     Point nearest = start;
     while (!q.empty()) {
         auto current = std::move(q.top());
@@ -87,7 +90,6 @@ Path AStarPathFinder::findPath(const Point& start, const Point& end) {
         current = place;
 
     }
-    path.push(start);
     return std::move(path);
 }
 

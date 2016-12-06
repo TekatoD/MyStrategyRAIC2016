@@ -6,7 +6,10 @@
 #include "Behavior.h"
 
 
-void Behavior::turn() {
+void Behavior::turn(Ptr<State> state) {
+    mWalkingAction.update(state);
+    mCastAction.update(state);
+
     mWalkingAction.perform();
     mCastAction.perform();
 }

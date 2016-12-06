@@ -61,6 +61,7 @@ public:
     }
 
     void update(Ptr<State> state) override {
+        mState = state;
         for (auto&& mechanism : mMechanismsList)
             mechanism->update(state);
 
@@ -95,7 +96,7 @@ public:
         }
 
         if (behavior != nullptr) {
-            behavior->turn();
+            behavior->turn(mState);
         }
     }
 
@@ -124,6 +125,7 @@ private:
 
 private:
     Ptr<TeacherType> mTeacher;
+    Ptr<State> mState;
     std::list<Ptr<Mechanism>> mMechanismsList;
     std::set<Ptr<Behavior>> mBehaviorsSet;
     std::set<Ptr<Situation>> mSituationsSet;

@@ -16,19 +16,24 @@ class WalkingAction : public Action {
 public:
     WalkingAction();
 
-    template <class Func>
-    WalkingAction(Func&& func) : mPathPlanner(std::forward<Func>(func)) {}
+    const Point& getTargetPoint() const;
 
+    void setTargetPoint(const Point& targetPoint);
 
-    template <class Func>
-    void setPathPlanner(Func&& func) {
-        mPathPlanner = std::forward<Func>(func);
-    }
+    const Point& getTrackingPoint() const;
+
+    void setTrackingPoint(const Point& trackingPoint);
+
+    double getSpeedFactor() const;
+
+    void setSpeedFactor(double speedFactor);
 
     void perform() override;
 
 private:
-    std::function<WalkingParameters(Ptr<State>)> mPathPlanner;
+    Point mTargetPoint;
+    Point mTrackingPoint;
+    double mSpeedFactor;
 };
 
 

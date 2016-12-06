@@ -17,7 +17,7 @@
 
 class Behavior : public SelfDisabler, public Named, public virtual Ranked, public virtual Refreshable, NonCopyable {
 public:
-    virtual void turn();
+    virtual void turn(Ptr<State> state);
 
 protected:
     Behavior(const std::string& name) : Named(name) {}

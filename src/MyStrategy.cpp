@@ -132,9 +132,9 @@ void MyStrategy::initialize(Ptr<State> state) {
     auto situationBotBonusExists = share<BonusExistsSituation>("bot_bonus_exists", posBonusBot);
 
     auto behaviorGoToTopBonus = share<BerserkBehavior<sectorSize>>("go_to_top_bonus", posBonusTop, walker,
-                                                       weaponry, sectorSize, false, true, 3);
+                                                       weaponry, sectorSize, 3, false, true, true);
     auto behaviorGoToBotBonus = share<BerserkBehavior<sectorSize>>("go_to_bot_bonus", posBonusTop, walker,
-                                                       weaponry, sectorSize, false, true, 3);
+                                                       weaponry, sectorSize, 3, false, true, true);
 
     mGameController.addRelationship(share<Relationship>(std::string("top_bonus"), situationTopBonusExists, behaviorGoToTopBonus));
     mGameController.addRelationship(share<Relationship>(std::string("bot_bonus"), situationBotBonusExists, behaviorGoToBotBonus));

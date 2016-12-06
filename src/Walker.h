@@ -50,7 +50,7 @@ public:
             if (path.isFinished()) return std::move(path);
             to = grid->getNearestPoint(path.pop());
         }
-        return mLocalFinder->findPath(from, to);
+        return  mLocalFinder->findPath(from, to);
     }
 
     void update(Ptr<State> state) override {
