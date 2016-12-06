@@ -36,6 +36,7 @@ Path AStarPathFinder::findPath(const Point& start, const Point& end) {
     waypoints.max_load_factor(0.8);
     bool found = false;
     auto graph = this->getGraph();
+    Point nearest = start;
     while (!q.empty()) {
         auto current = std::move(q.top());
         q.pop();
@@ -49,6 +50,9 @@ Path AStarPathFinder::findPath(const Point& start, const Point& end) {
         } else {
             continue;
         }
+        if (pos.getDistanceTo(end) < nearest.getDistanceTo(end)) {
+            nearest = pos;
+        }
 
         if (pos == end) {
             found = true;
@@ -61,12 +65,8 @@ Path AStarPathFinder::findPath(const Point& start, const Point& end) {
 
     }
 
-    if (!found) {
-        return Path{start};
-    }
-
     Path path;
-    auto current = end;
+    Point current = (found) ? end : nearest;
     while (current != start) {
         path.push(current);
         const auto& neighbours = graph->getNeighbourVertexes(current);
