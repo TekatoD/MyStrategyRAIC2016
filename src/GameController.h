@@ -77,7 +77,7 @@ public:
             if (situation->isDisabled()) {
                 this->removeSituation(situation);
             } else {
-                mTeacher->feedBehavior(situation);
+                mTeacher->feedSituation(situation);
             }
         }
     }
