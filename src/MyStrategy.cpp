@@ -7,6 +7,8 @@
 #include "Walker.h"
 #include "AStarPathFinder.h"
 #include "BonusExistsSituation.h"
+#include "Weaponry.h"
+#include "BerserkBehavior.h"
 
 
 MyStrategy::MyStrategy() : mInitialized(false) {
@@ -109,6 +111,7 @@ void MyStrategy::initialize(Ptr<State> state) {
     const size_t sectorSize = 15;
     const double filterRadius = std::sqrt(sectorSize * sectorSize * wizardSize * wizardSize * 2);
     // Initialize mechanisms
+    auto weaponry = share<Weaponry>();
     auto worldFilter = share<WorldFilter>(filterRadius);
     auto obstaclesGridMaker = share<ObstaclesGridMaker<sectorSize>>(worldFilter);
     auto walker = share<Walker<sectorSize>>(
@@ -118,12 +121,21 @@ void MyStrategy::initialize(Ptr<State> state) {
             share<AStarPathFinder>()
     );
 
+    mGameController.addMechanism(weaponry);
     mGameController.addMechanism(worldFilter);
     mGameController.addMechanism(obstaclesGridMaker);
     mGameController.addMechanism(walker);
 
     auto situationTopBonusExists = share<BonusExistsSituation>("top_bonus_exists", posBonusTop);
     auto situationBotBonusExists = share<BonusExistsSituation>("bot_bonus_exists", posBonusBot);
+
+    auto behaviorGoToTopBonus = share<BerserkBehavior<sectorSize>>("go_to_top_bonus", posBonusTop, walker,
+                                                       weaponry, sectorSize, false, true, 3);
+    auto behaviorGoToBotBonus = share<BerserkBehavior<sectorSize>>("go_to_bot_bonus", posBonusTop, walker,
+                                                       weaponry, sectorSize, false, true, 3);
+
+    mGameController.addRelationship(share<Relationship>(std::string("top_bonus"), situationTopBonusExists, behaviorGoToTopBonus));
+    mGameController.addRelationship(share<Relationship>(std::string("bot_bonus"), situationBotBonusExists, behaviorGoToBotBonus));
 
     // DO NOT EDIT WHAT'S BELOW!
     mInitialized = true;

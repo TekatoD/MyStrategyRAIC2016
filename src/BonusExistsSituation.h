@@ -9,7 +9,7 @@
 #include "Situation.h"
 #include "Point.h"
 
-class BonusExistsSituation : Situation {
+class BonusExistsSituation : public Situation {
 public:
     BonusExistsSituation(const std::string& name, const Point& position);
 

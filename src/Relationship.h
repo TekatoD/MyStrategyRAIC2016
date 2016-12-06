@@ -12,8 +12,7 @@
 
 class Relationship: public Named, NonCopyable {
 public:
-    Relationship(const std::string& name, Ptr<Situation> situation,
-                 Ptr<Behavior> behavior);
+    Relationship(const std::string& name, Ptr<Situation> situation, Ptr<Behavior> behavior);
 
     double getFactor() const;
 
