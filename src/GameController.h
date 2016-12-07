@@ -13,6 +13,7 @@
 #include "Situation.h"
 #include "Relationship.h"
 #include "Mechanism.h"
+#include "Log.h"
 
 template <class TeacherType>
 class GameController: public Refreshable, NonCopyable {
@@ -61,6 +62,7 @@ public:
     }
 
     void update(Ptr<State> state) override {
+        Log(DEBUG) << "Updating controller...";
         mState = state;
         for (auto&& mechanism : mMechanismsList)
             mechanism->update(state);
@@ -96,7 +98,10 @@ public:
         }
 
         if (behavior != nullptr) {
+            Log(DEBUG) << "Performing" << behavior->getName() << "behavior";
             behavior->turn(mState);
+        } else {
+            Log(WARN) << "Behavior wasn't selected!";
         }
     }
 

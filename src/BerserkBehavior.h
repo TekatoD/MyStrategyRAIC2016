@@ -7,6 +7,7 @@
 
 
 #include <cmath>
+#include <math.h>
 #include "Behavior.h"
 #include "Weaponry.h"
 #include "PathFinder.h"
@@ -16,10 +17,10 @@ class BerserkBehavior : public Behavior {
 public:
     BerserkBehavior(const std::string& name, const Point& position, Ptr<PathFinder> finder, Ptr<MagicSensors> sensors,
                     Ptr<Weaponry> weaponry, double acceptedRadius, double factor = 1.0, bool berserkMode = false,
-                    bool holdPositionRequired = false, bool fullProbability = false)
+                    bool fullProbability = false)
             : Behavior(name), mPosition(position), mAcceptedRadius(acceptedRadius), mBerserkMode(berserkMode),
-              mHoldPositionRequired(holdPositionRequired), mFullProbability(fullProbability),
-              mFinder(std::move(finder)), mSensors(std::move(sensors)), mWeaponry(std::move(weaponry)) {
+              mFullProbability(fullProbability), mFinder(std::move(finder)), mSensors(std::move(sensors)),
+              mWeaponry(std::move(weaponry)) {
         this->setFactor(factor);
     }
 
@@ -30,21 +31,14 @@ public:
 
         walkAction.setTargetPoint({self});
         if (!mBerserkMode) {
-            if (mHoldPositionRequired || !mPosition.inCircle({self}, mAcceptedRadius)) {
+            if (!mPosition.inCircle({self}, mAcceptedRadius)) {
+                Point pos = {self};
                 Path path = mFinder->findPath({self}, {mPosition});
+                if (path.countVertex() > 1) path.pop();
                 Log(DEBUG) << path;
                 Log(DEBUG) << *mSensors;
                 if (!path.isFinished()) {
-                    auto target = path.pop();
-                    auto angle = self.getAngle() + self.getAngleTo(target.getX(), target.getY());
-                    auto corrected = mSensors->correctDirection(angle, M_PI_2);
-                    if (angle != corrected) {
-                        Point local = target - Point{self};
-                        auto csin = sin(angle - corrected);
-                        auto ccos = cos(angle - corrected);
-                        target.setX(local.getX() * ccos - local.getY() * csin + self.getX());
-                        target.setY(local.getX() * csin + local.getY() * ccos + self.getY());
-                    }
+                    auto target = this->correctTarget(state, path.current());
                     walkAction.setSpeedFactor(1.0);
                     walkAction.setTargetPoint(target);
                     walkAction.setTrackingPoint(target);
@@ -92,25 +86,30 @@ public:
         mBerserkMode = berserkMode;
     }
 
-    bool isHoldPositionRequired() const {
-        return mHoldPositionRequired;
-    }
-
-    void setHoldPositionRequired(bool holdPositionRequired) {
-        mHoldPositionRequired = holdPositionRequired;
-    }
-
-
 private:
     void protectPosition(Ptr<State> state) {
 
+    }
+
+    Point correctTarget(Ptr<State> state, const Point& target) const {
+        const auto& self = state->self;
+        auto angle = self.getAngle() + self.getAngleTo(target.getX(), target.getY());
+        auto corrected = mSensors->correctDirection(angle, M_PI_2);
+        Point result = {target};
+        if (angle != corrected) {
+            Point local = target - Point{self};
+            auto csin = sin(angle - corrected);
+            auto ccos = cos(angle - corrected);
+            result.setX(local.getX() * ccos - local.getY() * csin + self.getX());
+            result.setY(local.getX() * csin + local.getY() * ccos + self.getY());
+        }
+        return result;
     }
 
 private:
     Point mPosition;
     double mAcceptedRadius;
     bool mBerserkMode;
-    bool mHoldPositionRequired;
     bool mFullProbability;
     Ptr<PathFinder> mFinder;
     Ptr<MagicSensors> mSensors;

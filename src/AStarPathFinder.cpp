@@ -29,7 +29,7 @@ Path AStarPathFinder::findPath(const Point& from, const Point& to) {
     }
     double dist = 0;
     auto comparator = [&end](const Waypoint& first, const Waypoint& second) -> bool {
-        return first.first.getDistanceTo(end) + first.second  < second.first.getDistanceTo(end) + second.second;
+        return first.first.getDistanceTo(end) + first.second  > second.first.getDistanceTo(end) + second.second;
     };
     std::vector<Waypoint> container;
     container.reserve(mInitialQueueSize);
@@ -66,7 +66,7 @@ Path AStarPathFinder::findPath(const Point& from, const Point& to) {
 
     }
     if(!found)
-        return Path{};
+        return Path{start};
     Path path;
     Point current = end;
     while (current != start) {
@@ -85,10 +85,10 @@ Path AStarPathFinder::findPath(const Point& from, const Point& to) {
                 return acc;
             }
         });
-        if (!found && current == place) return Path();
         current = place;
 
     }
+    path.push(start);
     return std::move(path);
 }
 

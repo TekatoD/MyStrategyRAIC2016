@@ -24,10 +24,13 @@ public:
 
     bool isFinished() const;
 
+    size_t countVertex() const;
+
     friend std::ostream& operator<<(std::ostream& os, const Path& path);
 
 private:
     std::forward_list<Point> mPoints;
+    size_t mSize;
 };
 
 

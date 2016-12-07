@@ -7,17 +7,19 @@
 
 
 Path::Path(std::initializer_list<Point> initializerList)
-        : mPoints(initializerList) {}
+        : mPoints(initializerList), mSize(initializerList.size()) {}
 
 
 void Path::push(const Point& point) {
     mPoints.emplace_front(point);
+    ++mSize;
 }
 
 
 Point Path::pop() {
     Point point = {mPoints.front()};
     mPoints.pop_front();
+    --mSize;
     return point;
 }
 
@@ -43,4 +45,9 @@ std::ostream& operator<<(std::ostream& os, const Path& path) {
 
 Point Path::current() {
     return mPoints.front();
+}
+
+
+size_t Path::countVertex() const {
+    return mSize;
 }

@@ -9,6 +9,8 @@
 #include "Weaponry.h"
 #include "BerserkBehavior.h"
 #include "Clusterer.h"
+#include "HoldingPositionChecker.h"
+#include "TakeBonusBehavior.h"
 
 
 MyStrategy::MyStrategy() : mInitialized(false) {
@@ -28,10 +30,8 @@ void MyStrategy::move(const model::Wizard& self,
     // Init controller
     if (!mInitialized) this->initialize(state);
     // Update world
-    Log(DEBUG) << "Updating controller...";
     mGameController.update(state);
     // Move!
-    Log(DEBUG) << "Performing turn...";
     mGameController.turn();
     auto endTimePoint = std::chrono::steady_clock::now();
     Log(DEBUG) << "Tick" << world.getTickIndex() << "completed for"
@@ -65,12 +65,22 @@ void MyStrategy::initialize(Ptr<State> state) {
     const auto posTowerTop1 =     Point{2629.339679648397, 350.0};
     const auto posTowerTop2 =     Point{1687.8740025771563, 50.0};
     // Define waypoints
+    const double baseOffset = 240;
     const auto wpCornerTop = Point(400, 400);
     const auto wpCornerBot = Point(3600, 3600);
     const auto wpBonusBot = Point(1200.0, 1200.0);
     const auto wpBonusTop = Point(2800.0, 2800.0);
-    const auto wpBaseTop = Point(3600.0 - (74.25 + 70.71), 400.0 + (74.25 + 70.71));
-    const auto wpBaseBot = Point(400.0 - (74.25 + 70.71), 3600.0 - (74.25 + 70.71));
+
+
+    const auto wpBaseTopTop = posBaseTop + Point{-baseOffset, -baseOffset};
+    const auto wpBaseTopMid = posBaseTop + Point{-baseOffset, baseOffset};
+    const auto wpBaseTopRight = posBaseTop + Point{-baseOffset, baseOffset};
+
+    const auto wpBaseBotLeft = posBaseBot + Point{-baseOffset, -baseOffset};
+    const auto wpBaseBotMid = posBaseBot + Point{baseOffset, -baseOffset};
+    const auto wpBaseBotBot = posBaseBot + Point{baseOffset, baseOffset};
+
+
     const auto wpTowerLeft1 = Point(50.0 + (52 + 50), 2693.2577778083373);
     const auto wpTowerLeft2 = Point(350.0 - (52 + 50), 1656.7486446626867);
     const auto wpTowerMidBot2 = Point(1929.2893218813454 - (35.35 + 74.25), 2400.0 - (35.35 + 74.25));
@@ -86,28 +96,46 @@ void MyStrategy::initialize(Ptr<State> state) {
     const auto wpCenter = Point(2000.0, 2000.0);
     // Initialize map
     Ptr<MapGraph> map = share<MapGraph>();
-    map->addEdge(wpBaseBot, wpTowerLeft1);
-    map->addEdge(wpTowerLeft1, wpTowerLeft2);
-    map->addEdge(wpTowerLeft2, wpCornerTop);
-    map->addEdge(wpBaseBot, wpTowerMidBot1);
-    map->addEdge(wpTowerMidBot1, wpTowerMidBot2);
-    map->addEdge(wpTowerMidBot2, wpCenter);
-    map->addEdge(wpBaseBot, wpTowerBot1);
-    map->addEdge(wpTowerBot1, wpTowerBot2);
-    map->addEdge(wpTowerBot2, wpCornerBot);
-    map->addEdge(wpBaseTop, wpTowerTop1);
-    map->addEdge(wpTowerTop1, wpTowerTop2);
-    map->addEdge(wpTowerTop2, wpCornerTop);
-    map->addEdge(wpBaseTop, wpTowerMidTop1);
-    map->addEdge(wpTowerMidTop1, wpTowerMidTop2);
-    map->addEdge(wpTowerMidTop2, wpCenter);
-    map->addEdge(wpBaseTop, wpTowerRight1);
-    map->addEdge(wpTowerRight1, wpTowerRight2);
-    map->addEdge(wpTowerRight2, wpCornerBot);
-    map->addEdge(wpCornerBot, wpBonusBot);
-    map->addEdge(wpBonusBot, wpCenter);
-    map->addEdge(wpCornerTop, wpBonusBot);
-    map->addEdge(wpBonusTop, wpCenter);
+    std::vector<std::pair<const Point*, const Point*>> edges = {{
+             {&wpBaseBotLeft,  &wpTowerLeft1},
+             {&wpTowerLeft2,   &wpCornerTop},
+             {&wpBaseBotMid,   &wpTowerMidBot1},
+             {&wpTowerMidBot1, &wpTowerMidBot2},
+             {&wpTowerMidBot2, &wpCenter},
+             {&wpBaseBotBot,   &wpTowerBot1},
+             {&wpTowerBot1,    &wpTowerBot2},
+             {&wpTowerBot2,    &wpCornerBot},
+             {&wpBaseTopTop,   &wpTowerTop1},
+             {&wpTowerTop1,    &wpTowerTop2},
+             {&wpTowerTop2,    &wpCornerTop},
+             {&wpBaseTopMid,   &wpTowerMidTop1},
+             {&wpTowerMidTop1, &wpTowerMidTop2},
+             {&wpTowerMidTop2, &wpCenter},
+             {&wpBaseTopRight, &wpTowerRight1},
+             {&wpTowerRight1,  &wpTowerRight2},
+             {&wpTowerRight2,  &wpCornerBot},
+             {&wpCornerBot,    &wpBonusBot},
+             {&wpBonusBot,     &wpCenter},
+             {&wpCornerTop,    &wpBonusBot},
+             {&wpBonusTop,     &wpCenter},
+             {&wpBaseBotLeft,   &wpBaseBotMid},
+             {&wpBaseBotBot,   &wpBaseBotMid},
+             {&wpBaseTopTop,   &wpBaseTopMid},
+             {&wpBaseTopRight, &wpBaseTopMid}
+    }};
+
+    const int tesselationLevel = 2;
+    for (const auto& edge : edges) {
+        const Point diff = (*edge.second - *edge.first) / tesselationLevel;
+        Point current = *edge.first;
+        for (int i = 0; i < tesselationLevel - 1; ++i) {
+            map->addEdge(current, current + diff);
+            current += diff;
+        }
+        map->addEdge(current, *edge.second);
+//        map->addEdge(*edge.first, *edge.second);
+    }
+
     // Define constants
     const double wizardSize = game.getWizardRadius();
     const size_t sectorSize = 15;
@@ -117,21 +145,26 @@ void MyStrategy::initialize(Ptr<State> state) {
     auto filter = share<WorldFilter>(filterRadius);
     auto sensors = share<MagicSensors>(filter, 64, wizardSize * 1.5);
     auto finder = share<AStarPathFinder>(map);
+    auto holdingChecker = share<HoldingPositionChecker>(32, 5.0);
 
     mGameController.addMechanism(weaponry);
     mGameController.addMechanism(filter);
     mGameController.addMechanism(sensors);
+    mGameController.addMechanism(holdingChecker);
 
     auto situationTopBonusExists = share<BonusExistsSituation>("top_bonus_exists", posBonusTop);
     auto situationBotBonusExists = share<BonusExistsSituation>("bot_bonus_exists", posBonusBot);
 
     auto behaviorGoToTopBonus = share<BerserkBehavior>("go_to_top_bonus", posBonusTop, finder, sensors, weaponry,
-                                                       sectorSize, 3, false, true, true);
+                                                       sectorSize, 3, false, true);
     auto behaviorGoToBotBonus = share<BerserkBehavior>("go_to_bot_bonus", posBonusBot, finder, sensors, weaponry,
-                                                       sectorSize, 3, false, true, true);
+                                                       sectorSize, 3, false, true);
+    auto behaviorBonusGetter = share<TakeBonusBehavior>("get_bonus", finder, sensors, 7);
 
-    mGameController.addRelationship(share<Relationship>(std::string("top_bonus"), situationTopBonusExists, behaviorGoToTopBonus));
-    mGameController.addRelationship(share<Relationship>(std::string("bot_bonus"), situationBotBonusExists, behaviorGoToBotBonus));
+    mGameController.addRelationship(share<Relationship>(std::string("go_to_top_bonus"), situationTopBonusExists, behaviorGoToTopBonus));
+    mGameController.addRelationship(share<Relationship>(std::string("go_to_bot_bonus"), situationBotBonusExists, behaviorGoToBotBonus));
+    mGameController.addRelationship(share<Relationship>(std::string("get_top_bonus"), situationBotBonusExists, behaviorBonusGetter));
+    mGameController.addRelationship(share<Relationship>(std::string("get_bot_bonus"), situationTopBonusExists, behaviorBonusGetter));
 
     // DO NOT EDIT WHAT'S BELOW!
     mInitialized = true;
