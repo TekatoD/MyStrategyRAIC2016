@@ -39,3 +39,8 @@ std::ostream& operator<<(std::ostream& os, const Path& path) {
     }
     return os;
 }
+
+
+Point Path::current() {
+    return mPoints.front();
+}

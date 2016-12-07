@@ -117,7 +117,6 @@ set(SRC
         src/ObstaclesGridMaker.h
         src/WorldFilter.cpp
         src/WorldFilter.h
-        src/Walker.h
         src/CallbackBehavior.cpp
         src/CallbackBehavior.h
         src/CallbackSituation.cpp
@@ -140,7 +139,7 @@ set(SRC
         src/Clusterer.cpp
         src/Clusterer.h
         src/MinionCluster.cpp
-        src/MinionCluster.h)
+        src/MinionCluster.h src/MagicSensors.cpp src/MagicSensors.h)
 
 add_executable(${PROJECT_NAME} ${SRC})
 add_definitions(-D_LINUX -D__DEBUG__)

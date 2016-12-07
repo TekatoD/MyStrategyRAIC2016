@@ -37,7 +37,7 @@ double Point::getDistanceTo(const Point& point) const {
 
 double Point::getDistanceTo(double x, double y) const {
     double dx = x - mX;
-    double dy = y - mX;
+    double dy = y - mY;
     return std::sqrt((float) (dx * dx + dy * dy));
 }
 

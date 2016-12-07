@@ -26,16 +26,15 @@ public:
         return mGraph;
     }
 
-    ObstaclesGridMaker(const Ptr<WorldFilter>& filter)
-            : mFilter(filter), mUpdated(false) {}
+    ObstaclesGridMaker(const Ptr<WorldFilter>& filter, double radius = 0)
+            : mFilter(filter), mUpdated(false), mRadius(radius) {}
 
 private:
     void updateGraph() const {
         if (!mUpdated) {
-//            if (mState == nullptr) return;
             mUpdated = true;
             auto& self = mState->self;
-            auto radius = self.getRadius();
+            auto radius = (mRadius == 0.0) ? self.getRadius() : mRadius;
             const double w = W - 1;
             mGraph = share<GridMapGraph<W, W>>(Point{self}, 2.0 * radius, Point{-w * radius, -w * radius});
 
@@ -93,6 +92,7 @@ private:
     Ptr<State> mState;
     mutable Ptr<GridMapGraph<W, W>> mGraph;
     mutable bool mUpdated;
+    mutable double mRadius;
 };
 
 

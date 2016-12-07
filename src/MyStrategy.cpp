@@ -4,7 +4,6 @@
 #include "WorldFilter.h"
 #include "ObstaclesGridMaker.h"
 #include "Log.h"
-#include "Walker.h"
 #include "AStarPathFinder.h"
 #include "BonusExistsSituation.h"
 #include "Weaponry.h"
@@ -114,27 +113,21 @@ void MyStrategy::initialize(Ptr<State> state) {
     const double filterRadius = std::sqrt(sectorSize * sectorSize * wizardSize * wizardSize * 2);
     // Initialize mechanisms
     auto weaponry = share<Weaponry>();
-    auto worldFilter = share<WorldFilter>(filterRadius);
-    auto obstaclesGridMaker = share<ObstaclesGridMaker<sectorSize>>(worldFilter);
-    auto walker = share<Walker<sectorSize>>(
-            map,
-            obstaclesGridMaker,
-            share<AStarPathFinder>(),
-            share<AStarPathFinder>()
-    );
+    auto filter = share<WorldFilter>(filterRadius);
+    auto sensors = share<MagicSensors>(filter, 64, wizardSize * 1.5);
+    auto finder = share<AStarPathFinder>(map);
 
     mGameController.addMechanism(weaponry);
-    mGameController.addMechanism(worldFilter);
-    mGameController.addMechanism(obstaclesGridMaker);
-    mGameController.addMechanism(walker);
+    mGameController.addMechanism(filter);
+    mGameController.addMechanism(sensors);
 
     auto situationTopBonusExists = share<BonusExistsSituation>("top_bonus_exists", posBonusTop);
     auto situationBotBonusExists = share<BonusExistsSituation>("bot_bonus_exists", posBonusBot);
 
-    auto behaviorGoToTopBonus = share<BerserkBehavior<sectorSize>>("go_to_top_bonus", posBonusTop, walker,
-                                                       weaponry, sectorSize, 3, false, true, true);
-    auto behaviorGoToBotBonus = share<BerserkBehavior<sectorSize>>("go_to_bot_bonus", posBonusTop, walker,
-                                                       weaponry, sectorSize, 3, false, true, true);
+    auto behaviorGoToTopBonus = share<BerserkBehavior>("go_to_top_bonus", posBonusTop, finder, sensors, weaponry,
+                                                       sectorSize, 3, false, true, true);
+    auto behaviorGoToBotBonus = share<BerserkBehavior>("go_to_bot_bonus", posBonusBot, finder, sensors, weaponry,
+                                                       sectorSize, 3, false, true, true);
 
     mGameController.addRelationship(share<Relationship>(std::string("top_bonus"), situationTopBonusExists, behaviorGoToTopBonus));
     mGameController.addRelationship(share<Relationship>(std::string("bot_bonus"), situationBotBonusExists, behaviorGoToBotBonus));

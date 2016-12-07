@@ -20,6 +20,8 @@ public:
 
     Point pop();
 
+    Point current();
+
     bool isFinished() const;
 
     friend std::ostream& operator<<(std::ostream& os, const Path& path);

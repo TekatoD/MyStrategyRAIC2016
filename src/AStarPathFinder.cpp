@@ -87,6 +87,7 @@ Path AStarPathFinder::findPath(const Point& from, const Point& to) {
                 return acc;
             }
         });
+        if (!found && current == place) return Path();
         current = place;
 
     }

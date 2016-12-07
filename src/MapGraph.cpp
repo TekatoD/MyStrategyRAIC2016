@@ -45,8 +45,7 @@ std::vector<std::pair<Point, double>> MapGraph::getNeighbourVertexes(const Point
     for(auto&& edge : mEdges) {
         if(edge.start == *found) {
             neighbours.push_back({Point(*mWaypoints.find(edge.end)), edge.distance});
-        }
-        else if(edge.end == *found) {
+        } else if(edge.end == *found) {
             neighbours.push_back({Point(*mWaypoints.find(edge.start)), edge.distance});
         }
     }
@@ -54,10 +53,15 @@ std::vector<std::pair<Point, double>> MapGraph::getNeighbourVertexes(const Point
 }
 
 Point MapGraph::getNearestVertex(const Point& point) const {
-    auto result = std::min_element(mWaypoints.begin(), mWaypoints.end(),
-                                   [&point](const auto& p1, const auto& p2){
-        return p1.getDistanceTo(point) < p2.getDistanceTo(point);
-    });
+    Point const* result;
+    double dist = std::numeric_limits<double>::max();
+    for (auto&& waypoint : mWaypoints) {
+        double tmp = waypoint.getDistanceTo(point);
+        if (tmp < dist) {
+            result = &waypoint;
+            dist = tmp;
+        }
+    }
     return *result;
 }
 

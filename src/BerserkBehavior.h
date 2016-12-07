@@ -6,19 +6,20 @@
 #pragma once
 
 
+#include <cmath>
 #include "Behavior.h"
-#include "Walker.h"
 #include "Weaponry.h"
+#include "PathFinder.h"
+#include "MagicSensors.h"
 
-template <size_t W>
 class BerserkBehavior : public Behavior {
 public:
-    BerserkBehavior(const std::string& name, const Point& position, Ptr<Walker<W>> walker,
-                    Ptr<Weaponry> weaponry, double sectorSize, double factor = 1.0, bool berserkMode = false,
+    BerserkBehavior(const std::string& name, const Point& position, Ptr<PathFinder> finder, Ptr<MagicSensors> sensors,
+                    Ptr<Weaponry> weaponry, double acceptedRadius, double factor = 1.0, bool berserkMode = false,
                     bool holdPositionRequired = false, bool fullProbability = false)
-            : Behavior(name), mPosition(position), mSectorSize(sectorSize), mBerserkMode(berserkMode),
-              mHoldPositionRequired(holdPositionRequired), mWalker(std::move(walker)), mWeaponry(std::move(weaponry)),
-              mFullProbability(fullProbability) {
+            : Behavior(name), mPosition(position), mAcceptedRadius(acceptedRadius), mBerserkMode(berserkMode),
+              mHoldPositionRequired(holdPositionRequired), mFullProbability(fullProbability),
+              mFinder(std::move(finder)), mSensors(std::move(sensors)), mWeaponry(std::move(weaponry)) {
         this->setFactor(factor);
     }
 
@@ -29,10 +30,20 @@ public:
 
         walkAction.setTargetPoint({self});
         if (!mBerserkMode) {
-            if (mHoldPositionRequired || !mPosition.inCircle({self}, mSectorSize)) {
-                Path path = mWalker->findPath({self}, {mPosition});
+            if (mHoldPositionRequired || !mPosition.inCircle({self}, mAcceptedRadius)) {
+                Path path = mFinder->findPath({self}, {mPosition});
+//                Log(DEBUG) << path;
                 if (!path.isFinished()) {
                     auto target = path.pop();
+                    auto angle = self.getAngle() + self.getAngleTo(target.getX(), target.getY());
+                    auto corrected = mSensors->correctDirection(angle, M_PI_2);
+                    if (angle != corrected) {
+                        Point local = target - Point{self};
+                        auto csin = sin(angle - corrected);
+                        auto ccos = cos(angle - corrected);
+                        target.setX(local.getX() * ccos - local.getY() * csin + self.getX());
+                        target.setY(local.getX() * csin + local.getY() * ccos + self.getY());
+                        }
                     walkAction.setSpeedFactor(1.0);
                     walkAction.setTargetPoint(target);
                     walkAction.setTrackingPoint(target);
@@ -96,12 +107,13 @@ private:
 
 private:
     Point mPosition;
-    double mSectorSize;
+    double mAcceptedRadius;
     bool mBerserkMode;
     bool mHoldPositionRequired;
-    Ptr<Walker<W>> mWalker;
-    Ptr<Weaponry> mWeaponry;
     bool mFullProbability;
+    Ptr<PathFinder> mFinder;
+    Ptr<MagicSensors> mSensors;
+    Ptr<Weaponry> mWeaponry;
 };
 
 
