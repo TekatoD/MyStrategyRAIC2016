@@ -9,6 +9,7 @@
 #include "BonusExistsSituation.h"
 #include "Weaponry.h"
 #include "BerserkBehavior.h"
+#include "Clusterer.h"
 
 
 MyStrategy::MyStrategy() : mInitialized(false) {
@@ -122,11 +123,13 @@ void MyStrategy::initialize(Ptr<State> state) {
             share<AStarPathFinder>(),
             share<AStarPathFinder>()
     );
+    auto clusterer = share<Clusterer>(wizardSize * 8, true, 4 * wizardSize);
 
     mGameController.addMechanism(weaponry);
     mGameController.addMechanism(worldFilter);
     mGameController.addMechanism(obstaclesGridMaker);
     mGameController.addMechanism(walker);
+    mGameController.addMechanism(clusterer);
 
     auto situationTopBonusExists = share<BonusExistsSituation>("top_bonus_exists", posBonusTop);
     auto situationBotBonusExists = share<BonusExistsSituation>("bot_bonus_exists", posBonusBot);
