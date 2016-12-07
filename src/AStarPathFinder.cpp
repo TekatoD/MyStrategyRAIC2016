@@ -29,7 +29,7 @@ Path AStarPathFinder::findPath(const Point& from, const Point& to) {
     }
     double dist = 0;
     auto comparator = [&end](const Waypoint& first, const Waypoint& second) -> bool {
-        return first.first.getDistanceTo(end) + first.second  > second.first.getDistanceTo(end) + second.second;
+        return first.first.getDistanceTo(end) + first.second  < second.first.getDistanceTo(end) + second.second;
     };
     std::vector<Waypoint> container;
     container.reserve(mInitialQueueSize);
@@ -39,16 +39,13 @@ Path AStarPathFinder::findPath(const Point& from, const Point& to) {
     std::unordered_map<Point, double> waypoints;
     waypoints.max_load_factor(0.8);
     bool found = false;
-    Point nearest = start;
     while (!q.empty()) {
         auto current = std::move(q.top());
         q.pop();
         auto& pos = current.first;
         dist =  current.second;
         auto contains = waypoints.find(pos);
-        if (pos.getDistanceTo(end) < nearest.getDistanceTo(end)) {
-            nearest = pos;
-        }
+
         if (contains == waypoints.cend()) {
             waypoints.emplace(current);
         } else if (contains->second > dist) {
@@ -68,17 +65,18 @@ Path AStarPathFinder::findPath(const Point& from, const Point& to) {
         }
 
     }
-
+    if(!found)
+        return Path{};
     Path path;
-    Point current = (found) ? end : nearest;
+    Point current = end;
     while (current != start) {
         path.push(current);
         const auto& neighbours = graph->getNeighbourVertexes(current);
         auto place = std::accumulate(neighbours.cbegin(), neighbours.cend(), current,
                                      [&waypoints, &dist](const Point& acc, const auto& pair) -> Point {
             const auto& point = pair.first;
-            auto found = waypoints.find(point);
-            if (found == waypoints.end()) return acc;
+            const auto found = waypoints.find(point);
+            if (found == waypoints.cend()) return acc;
             auto len = found->second;
             if (len < dist) {
                 dist = len;

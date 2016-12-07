@@ -9,13 +9,14 @@
 #include <vector>
 #include <algorithm>
 #include <cmath>
+#include <ostream>
 #include "Point.h"
 #include "Mechanism.h"
 #include "WorldFilter.h"
 
 class MagicSensors : public Mechanism {
 public:
-    MagicSensors(Ptr<WorldFilter> filter, size_t  count, double radius);
+    MagicSensors(Ptr<WorldFilter> filter, size_t count, double radius);
 
     void update(Ptr<State> state) override;
 
@@ -24,6 +25,8 @@ public:
     double getRadius() const;
 
     bool isTriggered() const;
+
+    friend std::ostream& operator<<(std::ostream& os, const MagicSensors& sensors);
 
 private:
     Ptr<WorldFilter> mFilter;

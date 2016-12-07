@@ -32,7 +32,8 @@ public:
         if (!mBerserkMode) {
             if (mHoldPositionRequired || !mPosition.inCircle({self}, mAcceptedRadius)) {
                 Path path = mFinder->findPath({self}, {mPosition});
-//                Log(DEBUG) << path;
+                Log(DEBUG) << path;
+                Log(DEBUG) << *mSensors;
                 if (!path.isFinished()) {
                     auto target = path.pop();
                     auto angle = self.getAngle() + self.getAngleTo(target.getX(), target.getY());
@@ -43,7 +44,7 @@ public:
                         auto ccos = cos(angle - corrected);
                         target.setX(local.getX() * ccos - local.getY() * csin + self.getX());
                         target.setY(local.getX() * csin + local.getY() * ccos + self.getY());
-                        }
+                    }
                     walkAction.setSpeedFactor(1.0);
                     walkAction.setTargetPoint(target);
                     walkAction.setTrackingPoint(target);

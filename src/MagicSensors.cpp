@@ -8,7 +8,7 @@
 
 
 MagicSensors::MagicSensors(Ptr<WorldFilter> filter, size_t count, double radius)
-        : mRadius(radius), mFilter(std::move(filter)), mPositions{count}, mSensors{count, false} {
+        : mRadius(radius), mFilter(std::move(filter)), mPositions(count), mSensors(count, false) {
     const double step = M_PI * 2 / count;
     for (int i = 0; i < count; ++i) {
         mPositions[i] = {radius * std::cos(i * step), radius * std::sin(i * step)};
@@ -106,4 +106,12 @@ double MagicSensors::getRadius() const {
 
 bool MagicSensors::isTriggered() const {
     return mTriggered;
+}
+
+
+std::ostream& operator<<(std::ostream& os, const MagicSensors& sensors) {
+    os << "Sensors: ";
+    for (auto&& s : sensors.mSensors)
+        os << s << ' ';
+    return os;
 }
