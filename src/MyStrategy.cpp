@@ -8,6 +8,7 @@
 #include "BonusExistsSituation.h"
 #include "Weaponry.h"
 #include "BerserkBehavior.h"
+#include "Clusterer.h"
 
 
 MyStrategy::MyStrategy() : mInitialized(false) {

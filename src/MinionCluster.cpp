@@ -75,17 +75,22 @@ std::pair<double, double> MinionCluster::getYRange() const {
 
 
 bool MinionCluster::mergeWithCluster(const MinionCluster& other, double mergeDist) {
-    if(mCenter.getDistanceTo(other.mCenter) < (mClusterRadius + other.mClusterRadius + mergeDist)) {
+    if(other == *this) {
+        return false;
+    }
+    if(mCenter.inCircle(other.mCenter, (mClusterRadius + other.mClusterRadius + mergeDist))) {
         mCenter.setX((mCenter.getX() + other.mCenter.getX()) / 2);
         mCenter.setY((mCenter.getY() + other.mCenter.getY()) / 2);
         if (other.mXRange.first < mXRange.first) {
             mXRange.first = other.mXRange.first;
-        } else if (other.mXRange.second > mXRange.second) {
+        }
+        if (other.mXRange.second > mXRange.second) {
             mXRange.second = other.mXRange.second;
         }
         if (other.mYRange.first < mYRange.first) {
             mYRange.first = other.mYRange.first;
-        } else if (other.mYRange.second > mYRange.second) {
+        }
+        if (other.mYRange.second > mYRange.second) {
             mYRange.second = other.mYRange.second;
         }
         mCount += other.mCount;
@@ -113,6 +118,7 @@ std::ostream& operator<<(std::ostream& os, const MinionCluster& minionCluster) {
     os << "Center(" << minionCluster.mCenter << ")" << " XRange(" << minionCluster.mXRange.first
                                                     << "," << minionCluster.mXRange.second << ")"
                                                     << " YRange(" << minionCluster.mYRange.first
-                                                    << "," << minionCluster.mYRange.second << ")";
+                                                    << "," << minionCluster.mYRange.second << ")"
+                                                    << " count: " << minionCluster.mCount;
     return os;;
 }

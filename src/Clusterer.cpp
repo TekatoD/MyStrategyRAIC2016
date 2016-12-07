@@ -4,6 +4,7 @@
  */
 
 #include "Clusterer.h"
+#include "Log.h"
 
 Clusterer::Clusterer(double clusterRadius, bool mergeNeeded, double mergeDist) : mClusterRadius(clusterRadius),
                                                                                  mMergeNeeded(mergeNeeded),
@@ -30,29 +31,41 @@ void Clusterer::update(Ptr<State> state) {
             this->mergeClusters(mEnemyClusters);
         }
     }
+    if(mFriendlyClusters.size() > 0 || mEnemyClusters.size() > 0) {
+        Log(DEBUG) << "friendle clusters!!!";
+        for (auto &&cluster : mFriendlyClusters) {
+            Log(DEBUG) << cluster;
+        }
+        Log(DEBUG) << "evil clusters!!!";
+        for (auto &&cluster : mEnemyClusters) {
+            Log(DEBUG) << cluster;
+        }
+        Log(DEBUG) << "clusters!!!";
+    }
 }
 
 
 void Clusterer::updateVector(const model::Minion& minion, std::vector<MinionCluster>& clusterVector) {
     bool clusterNotNeeded = false;
-    std::find_if(clusterVector.begin(), clusterVector.end(), [&clusterNotNeeded, &minion](auto cluster) {
+    auto res = std::find_if(clusterVector.begin(), clusterVector.end(), [&clusterNotNeeded, &minion](MinionCluster& cluster) {
         clusterNotNeeded = cluster.accamulateXY(minion);
         return clusterNotNeeded;
     });
-    if(!clusterNotNeeded) {
+//    if(!clusterNotNeeded) {
+    if(res == clusterVector.end()) {
         clusterVector.push_back(MinionCluster{mClusterRadius, minion});
     }
 }
 
 
 void Clusterer::mergeClusters(std::vector<MinionCluster> &clusterVector) {
-    for(auto&& cluster : clusterVector) {
-        double distAlias = mMergeDist;
-        auto toDelete = std::find_if(clusterVector.begin(), clusterVector.end(), [&cluster, &distAlias](const auto& cluster2){
-            return cluster.mergeWithCluster(cluster2, distAlias) && !(cluster==cluster2);
+    double distAlias = mMergeDist;
+    for(int i = 0; i < clusterVector.size(); ++i) {
+        auto toErase = std::remove_if(clusterVector.begin(), clusterVector.end(), [&clusterVector, i, distAlias](const auto& cluster2){
+            return clusterVector[i].mergeWithCluster(cluster2, distAlias);
         });
-        if(toDelete != clusterVector.end()) {
-            clusterVector.erase(toDelete);
+        if(toErase != clusterVector.end()) {
+            clusterVector.erase(toErase, clusterVector.end());
         }
     }
 }
