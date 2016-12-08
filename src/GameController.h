@@ -67,20 +67,27 @@ public:
         for (auto&& mechanism : mMechanismsList)
             mechanism->update(state);
 
-        for (auto&& behavior : mBehaviorsSet) {
-            behavior->update(state);
-            if (behavior->isDisabled()) {
-                this->removeBehavior(behavior);
-            } else {
-                mTeacher->feedBehavior(behavior);
-            }
-        }
         for (auto&& situation : mSituationsSet) {
             situation->update(state);
             if (situation->isDisabled()) {
                 this->removeSituation(situation);
             } else {
+                Log(DEBUG) << " -Situation" << situation->getName()
+                           << "has factor" << situation->getFactor()
+                           << "and probability" << situation->getProbability();
                 mTeacher->feedSituation(situation);
+            }
+        }
+
+        for (auto&& behavior : mBehaviorsSet) {
+            behavior->update(state);
+            if (behavior->isDisabled()) {
+                this->removeBehavior(behavior);
+            } else {
+                Log(DEBUG) << " -Behavior" << behavior->getName()
+                           << "has factor" << behavior->getFactor()
+                           << "and probability" << behavior->getProbability();
+                mTeacher->feedBehavior(behavior);
             }
         }
     }

@@ -18,6 +18,7 @@ private:
 
 public:
     Point mPosition;
+    bool mExists;
 };
 
 
