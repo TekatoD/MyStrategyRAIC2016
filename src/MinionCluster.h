@@ -27,9 +27,9 @@ public:
 
     Point getCenter() const;
 
-    std::pair<double, double> getXrange() const;
+    double getXrange() const;
 
-    std::pair<double, double> getYRange() const;
+    double getYRange() const;
 
     bool mergeWithCluster(const MinionCluster& other, double mergeDist);
 
@@ -44,7 +44,9 @@ private:
     double mClusterRadius;
     Point mCenter;
     int mCount;
-    std::pair<double, double> mXRange;
-    std::pair<double, double> mYRange;
+    std::pair<double, double> mXEdges;
+    std::pair<double, double> mYEdges;
+    double mXRange;
+    double mYRange;
 };
 

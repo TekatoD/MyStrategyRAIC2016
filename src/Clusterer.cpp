@@ -36,17 +36,17 @@ void Clusterer::updateClusterer() const {
             this->mergeClusters(mFriendlyClusters);
             this->mergeClusters(mEnemyClusters);
         }
-//        if (this->mFriendlyClusters.size() > 0 || this->mEnemyClusters.size() > 0) {
-//            Log(DEBUG) << "friendle clusters!!!";
-//            for (auto&& cluster : this->mFriendlyClusters) {
-//                Log(DEBUG) << cluster;
-//            }
-//            Log(DEBUG) << "evil clusters!!!";
-//            for (auto&& cluster : this->mEnemyClusters) {
-//                Log(DEBUG) << cluster;
-//            }
-//            Log(DEBUG) << "clusters!!!";
-//        }
+        if (this->mFriendlyClusters.size() > 0 || this->mEnemyClusters.size() > 0) {
+            Log(DEBUG) << "friendle clusters!!!";
+            for (auto&& cluster : this->mFriendlyClusters) {
+                Log(DEBUG) << cluster;
+            }
+            Log(DEBUG) << "evil clusters!!!";
+            for (auto&& cluster : this->mEnemyClusters) {
+                Log(DEBUG) << cluster;
+            }
+            Log(DEBUG) << "clusters!!!";
+        }
     }
 }
 

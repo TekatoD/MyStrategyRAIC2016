@@ -149,7 +149,7 @@ void MyStrategy::initialize(Ptr<State> state) {
     auto sensors = share<MagicSensors>(filter, 64, wizardSize * 1.5);
     auto finder = share<AStarPathFinder>(map);
     auto holdingChecker = share<HoldingPositionChecker>(32, 5.0);
-    auto clusterer = share<Clusterer>(wizardSize * 8, true, wizardSize * 3);
+    auto clusterer = share<Clusterer>(wizardSize * 4, true, wizardSize * 2);
 
     mGameController.addMechanism(berserkTools);
     mGameController.addMechanism(filter);
