@@ -102,6 +102,89 @@ public:
         mOffset = offset;
     }
 
+    void drawCircle(const Point& center, double radius, int value) {
+        double cx = center.getX();
+        double cy = center.getY();
+        double x = 0;
+        double y = radius;
+        double err = 0;
+//        const double step = this->getCellSize();
+        const double step = 1; //TODO: This is solves the problem of empty spaces within the circle, but makes it slower
+        double delta = step - 2 * radius;
+        while (y >= 0) {
+            this->setCellValue({cx + x, cy + y}, value);
+            this->setCellValue({cx + x, cy - y}, value);
+            this->setCellValue({cx - x, cy + y}, value);
+            this->setCellValue({cx - x, cy - y}, value);
+            err = 2 * (delta + y) - step;
+            if(delta <= 0 && err <= 0) {
+                x += step;
+                delta += (2 * x) + step;
+                continue;
+            }
+            err = 2 * (delta + x) - step;
+            if(delta >= 0 && err >= 0) {
+                y -= step;
+                delta +=  step - (2 * y);
+                continue;
+            }
+            x += step;
+            delta += 2 * (x - y);
+            y -= step;
+        }
+    }
+
+    void drawFilledCircle(const Point& center, double radius, int value) {
+        this->setCellValue({center.getX(), center.getY()}, value);
+        while(radius > 0) {
+            this->drawCircle(center, radius, value);
+            radius -= this->getCellSize();
+        }
+
+    }
+
+    void drawLine(const Point& start, const Point& end, int value) {
+        Point delta = end - start;
+        double cellSize = this->getCellSize();
+        Point step{cellSize, cellSize};
+//        Point step{1, 1};
+        if(delta.getX() < 0) step.setX(-step.getX());
+        if(delta.getY() < 0) step.setY(-step.getY());
+        delta.setX(abs(delta.getX()));
+        delta.setY(abs(delta.getY()));
+        int pdx = 0;
+        int pdy = 0;
+        int es = 0;
+        int el = 0;
+        if(delta.getX() > delta.getY()) {
+            pdx = (int)step.getX();
+            es = (int)delta.getY();
+            el = (int)delta.getX();
+        }
+        else {
+            pdy = (int)step.getY();
+            es = (int)delta.getX();
+            el = (int)delta.getY();
+        }
+        double x = start.getX();
+        double y = start.getY();
+        int err = el / 2;
+        this->setCellValue({x, y}, value);
+        for(int i = 0 ; i < el; i += cellSize) {
+            err -= es;
+            if(err < 0) {
+                err += el;
+                x += step.getX();
+                y += step.getY();
+            }
+            else {
+                x += pdx;
+                y += pdy;
+            }
+            this->setCellValue({x, y}, value);
+        }
+    }
+
     Point normalize(const Point& point) const {
         if (this->isContainsPoint(point)) return point;
         Point local{ this->getLocalPoint(point) };
