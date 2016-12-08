@@ -119,21 +119,26 @@ void MyStrategy::initialize(Ptr<State> state) {
              {&wpCornerTop,    &wpBonusBot},
              {&wpBonusTop,     &wpCenter},
              {&wpBaseBotLeft,   &wpBaseBotMid},
-             {&wpBaseBotBot,   &wpBaseBotMid},
-             {&wpBaseTopTop,   &wpBaseTopMid},
-             {&wpBaseTopRight, &wpBaseTopMid}
+             {&wpBaseBotBot,   &wpBaseBotMid}
+    // TODO: Rounded corners
+//             {&wpBaseTopTop,   &wpBaseTopMid},
+//             {&wpBaseTopRight, &wpBaseTopMid}
     }};
 
     const int tesselationLevel = 2;
+    const double tesselationThreshold = 400.0;
     for (const auto& edge : edges) {
-        const Point diff = (*edge.second - *edge.first) / tesselationLevel;
-        Point current = *edge.first;
-        for (int i = 0; i < tesselationLevel - 1; ++i) {
-            map->addEdge(current, current + diff);
-            current += diff;
+        if (edge.second->inCircle(*edge.second, tesselationThreshold)) {
+            const Point diff = (*edge.second - *edge.first) / tesselationLevel;
+            Point current = *edge.first;
+            for (int i = 0; i < tesselationLevel - 1; ++i) {
+                map->addEdge(current, current + diff);
+                current += diff;
+            }
+            map->addEdge(current, *edge.second);
+        } else {
+            map->addEdge(*edge.first, *edge.second);
         }
-        map->addEdge(current, *edge.second);
-//        map->addEdge(*edge.first, *edge.second);
     }
 
     // Define constants

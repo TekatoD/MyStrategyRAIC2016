@@ -27,6 +27,7 @@ void TakeBonusBehavior::update(Ptr<State> state) {
     const auto& world = state->world;
     const auto& self = state->self;
     const auto& bonuses = world.getBonuses();
+    // TODO: Wizards check
     if (bonuses.empty()) {
         this->setProbability(0.0);
         return;
