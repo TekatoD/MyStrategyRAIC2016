@@ -11,32 +11,42 @@
 
 class Clusterer : public Mechanism {
 public:
-    Clusterer(double clusterRadius, bool mergeNeeded, double mergeDist);
+    Clusterer(double clusterRadius, bool mergeNeeded, double mergeDistance);
 
     double getClusterRadius() const;
 
-    void setClusterRadius(double clusterRadius);
+    void setClusterRadius(double radius);
 
-    bool isMergeNeeded() const;
+    bool isAutoMergeEnabled() const;
 
-    void setMergeNeeded(bool mMergeNeeded);
+    void setAutoMerge(bool autoMerge);
 
-    double getMergeDist() const;
+    double getMergeDistance() const;
 
-    void setMergeDist(double mMergeDist);
+    void setMergeDistance(double distance);
 
     void update(Ptr<State> state) override;
 
+    const std::vector<MinionCluster>& getFriendlyClusters() const;
+
+    const std::vector<MinionCluster>& getEnemyClusters() const;
+
 private:
-    void updateVector(const model::Minion& minion, std::vector<MinionCluster>& clusterVector);
+    void updateVector(const model::Minion& minion, std::vector<MinionCluster>& clusterVector) const;
 
-    void mergeClusters(std::vector<MinionCluster> &clusterVector);
+    void mergeClusters(std::vector<MinionCluster> &clusterVector) const;
 
+    void updateClusterer() const;
+
+private:
     Ptr<State> mState;
     double mClusterRadius;
-    std::vector<MinionCluster> mFriendlyClusters;
-    std::vector<MinionCluster> mEnemyClusters;
-    bool mMergeNeeded;
-    double mMergeDist;
+    mutable bool mUpdated;
+    mutable std::vector<MinionCluster> mFriendlyClusters;
+    mutable std::vector<MinionCluster> mEnemyClusters;
+    bool mAutoMerge;
+    double mMergeDistance;
+
+
 };
 

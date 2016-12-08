@@ -9,8 +9,6 @@ Point::Point() : mX(0), mY(0) {}
 
 Point::Point(double x, double y) : mX(x), mY(y) {}
 
-Point::Point(model::Unit unit) : mX(unit.getX()), mY(unit.getY()) {}
-
 double Point::getX() const {
     return mX;
 }
@@ -25,14 +23,6 @@ double Point::getY() const {
 
 void Point::setY(double y) {
     mY = y;
-}
-
-double Point::getDistanceTo(model::Unit unit) const {
-    return unit.getDistanceTo(mX, mY);
-}
-
-double Point::getDistanceTo(const Point& point) const {
-    return this->getDistanceTo(point.getX(), point.getY());
 }
 
 double Point::getDistanceTo(double x, double y) const {

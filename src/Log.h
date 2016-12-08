@@ -19,7 +19,7 @@ enum TypeLog {
 
 class Log {
 public:
-    Log(TypeLog level);
+    Log(TypeLog level, const std::string& separator = " ");
 
     ~Log();
 
@@ -28,7 +28,12 @@ public:
     Log& operator<<(const T& msg) {
         if (mLevel >= sGlobalLevel) {
             this->prompt();
-            std::cerr << ' ' << msg;
+            if (!mFirst) {
+                mFirst = true;
+            } else {
+                std::cerr << mSeparator;
+            }
+            std::cerr << msg;
         }
         return *this;
     }
@@ -41,6 +46,8 @@ private:
 
     TypeLog mLevel;
     bool mPrompt;
+    bool mFirst;
+    const std::string mSeparator;
 
     static TypeLog sGlobalLevel;
     static const char* LABELS[4];

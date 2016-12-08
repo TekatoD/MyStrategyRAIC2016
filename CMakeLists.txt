@@ -131,15 +131,21 @@ set(SRC
         src/DamagedWizardSituation.h
         src/DamagedBuildingSituation.cpp
         src/DamagedBuildingSituation.h
-        src/Weaponry.cpp
-        src/Weaponry.h
+        src/BerserkTools.cpp
+        src/BerserkTools.h
         src/BerserkBehavior.h
         src/Ranked.cpp
         src/SelfDisabler.h
         src/Clusterer.cpp
         src/Clusterer.h
         src/MinionCluster.cpp
-        src/MinionCluster.h src/MagicSensors.cpp src/MagicSensors.h src/HoldingPositionChecker.cpp src/HoldingPositionChecker.h src/TakeBonusBehavior.cpp src/TakeBonusBehavior.h)
+        src/MinionCluster.h
+        src/MagicSensors.cpp
+        src/MagicSensors.h
+        src/HoldingPositionChecker.cpp
+        src/HoldingPositionChecker.h
+        src/TakeBonusBehavior.cpp
+        src/TakeBonusBehavior.h)
 
 add_executable(${PROJECT_NAME} ${SRC})
 add_definitions(-D_LINUX -D__DEBUG__)

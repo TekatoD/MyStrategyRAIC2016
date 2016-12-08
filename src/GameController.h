@@ -19,7 +19,8 @@ template <class TeacherType>
 class GameController: public Refreshable, NonCopyable {
 public:
     GameController(Ptr<TeacherType> teacher = nullptr)
-            : mTeacher((teacher == nullptr ) ? share<TeacherType>() : teacher) {
+            : mTeacher((teacher == nullptr ) ? share<TeacherType>() : teacher),
+              mState(nullptr), mActiveBehavior(nullptr) {
         this->addMechanism(mTeacher);
     }
 
@@ -106,6 +107,10 @@ public:
 
         if (behavior != nullptr) {
             Log(DEBUG) << "Performing" << behavior->getName() << "behavior";
+            if (mActiveBehavior != nullptr && mActiveBehavior != behavior) {
+                mActiveBehavior->finalize();
+                mActiveBehavior = behavior;
+            }
             behavior->turn(mState);
         } else {
             Log(WARN) << "Behavior wasn't selected!";
@@ -142,6 +147,7 @@ private:
     std::set<Ptr<Behavior>> mBehaviorsSet;
     std::set<Ptr<Situation>> mSituationsSet;
     std::set<Ptr<Relationship>> mRelationshipsSet;
+    Ptr<Behavior> mActiveBehavior;
 };
 
 

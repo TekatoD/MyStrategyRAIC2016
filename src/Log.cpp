@@ -11,7 +11,8 @@ const char* Log::LABELS[4] =  {"DEBUG", "INFO", "WARN", "ERROR"};
 TypeLog Log::sGlobalLevel = WARN;
 
 
-Log::Log(TypeLog level) : mLevel(level), mPrompt(false) {
+Log::Log(TypeLog level, const std::string& separator)
+        : mLevel(level), mFirst(true), mPrompt(false), mSeparator(separator) {
     if (level >= sGlobalLevel) {
         this->prompt();
     }
@@ -20,6 +21,7 @@ Log::Log(TypeLog level) : mLevel(level), mPrompt(false) {
 void Log::prompt() {
     if (!mPrompt) {
         std::cerr << '[' << Log::LABELS[mLevel] << ']';
+        if (mSeparator != " ") std::cerr << " ";
         mPrompt = true;
     }
 }

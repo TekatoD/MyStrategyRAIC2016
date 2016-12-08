@@ -32,3 +32,5 @@ WalkingAction& Behavior::getWalkingAction() {
 CastAction& Behavior::getCastAction() {
     return mCastAction;
 }
+
+void Behavior::finalize() {}

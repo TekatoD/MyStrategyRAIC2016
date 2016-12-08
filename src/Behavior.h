@@ -19,6 +19,8 @@ class Behavior : public SelfDisabler, public Named, public virtual Ranked, publi
 public:
     virtual void turn(Ptr<State> state);
 
+    virtual void finalize();
+
 protected:
     Behavior(const std::string& name) : Named(name) {}
 

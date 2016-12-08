@@ -18,13 +18,11 @@ public:
 
     Point(double x, double y);
 
-    Point(model::Unit unit);
-
-    Point(const Point& other) {
-        mX = other.mX;
-        mY = other.mY;
+    template <class T>
+    Point(const T& t) {
+        mX = t.getX();
+        mY = t.getY();
     }
-
 
     double getX() const;
 
@@ -34,9 +32,10 @@ public:
 
     void setY(double y);
 
-    double getDistanceTo(model::Unit unit) const;
-
-    double getDistanceTo(const Point& point) const;
+    template <class T>
+    double getDistanceTo(const T& t) const {
+        return this->getDistanceTo(t.getX(), t.getY());
+    }
 
     double getDistanceTo(double x, double y) const;
 

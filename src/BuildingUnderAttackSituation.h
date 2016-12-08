@@ -8,14 +8,16 @@
 
 #include "Situation.h"
 #include "Point.h"
+#include "Clusterer.h"
 
 class BuildingUnderAttackSituation : public Situation {
 public:
-    BuildingUnderAttackSituation(const std::string& name, const Point& position, double radius = 50.0);
+    BuildingUnderAttackSituation(const std::string& name, const Point& position, double radius, Ptr<Clusterer> clusterer);
 
     void update(Ptr<State> state) override;
 
 private:
+    Ptr<Clusterer> mClusterer;
     Point mPosition;
     double mRadius;
 };

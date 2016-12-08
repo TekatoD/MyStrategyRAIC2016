@@ -9,18 +9,18 @@
 #include <cmath>
 #include <math.h>
 #include "Behavior.h"
-#include "Weaponry.h"
+#include "BerserkTools.h"
 #include "PathFinder.h"
 #include "MagicSensors.h"
 
 class BerserkBehavior : public Behavior {
 public:
     BerserkBehavior(const std::string& name, const Point& position, Ptr<PathFinder> finder, Ptr<MagicSensors> sensors,
-                    Ptr<Weaponry> weaponry, double acceptedRadius, double factor = 1.0, bool berserkMode = false,
+                    Ptr<BerserkTools> berserkTools, double acceptedRadius, double factor = 1.0, bool berserkMode = false,
                     bool fullProbability = false)
-            : Behavior(name), mPosition(position), mAcceptedRadius(acceptedRadius), mBerserkMode(berserkMode),
+            : Behavior(name), mUpdateNeeded(true), mPosition(position), mAcceptedRadius(acceptedRadius), mBerserkMode(berserkMode),
               mFullProbability(fullProbability), mFinder(std::move(finder)), mSensors(std::move(sensors)),
-              mWeaponry(std::move(weaponry)) {
+              mBerserkTools(std::move(berserkTools)) {
         this->setFactor(factor);
     }
 
@@ -28,17 +28,24 @@ public:
         CastAction& castAction = this->getCastAction();
         WalkingAction& walkAction = this->getWalkingAction();
         auto& self = state->self;
-
+        Point pos = {self};
+        if (!mWaypoint.inCircle(pos, mAcceptedRadius)) {
+            mUpdateNeeded = true;
+        }
         walkAction.setTargetPoint({self});
         if (!mBerserkMode) {
             if (!mPosition.inCircle({self}, mAcceptedRadius)) {
-                Point pos = {self};
-                Path path = mFinder->findPath({self}, {mPosition});
-                if (path.countVertex() > 1) path.pop();
-                Log(DEBUG) << path;
-                Log(DEBUG) << *mSensors;
-                if (!path.isFinished()) {
-                    auto target = this->correctTarget(state, path.current());
+                if (mUpdateNeeded) {
+                    mPath = mFinder->findPath({self}, {mPosition});
+                    mUpdateNeeded = false;
+                }
+
+                while (pos.inCircle(mPath.current(), mAcceptedRadius)) mWaypoint = mPath.pop();
+                Log(DEBUG) << mPath;
+                if (mBerserkTools->isInStuffRange() && mBerserkTools->isStuffAvailable()) {
+                    walkAction.setTargetPoint(pos);
+                } else if (!mPath.isFinished()) {
+                    auto target =  this->correctTarget(state, mPath.current());
                     walkAction.setSpeedFactor(1.0);
                     walkAction.setTargetPoint(target);
                     walkAction.setTrackingPoint(target);
@@ -49,8 +56,15 @@ public:
         } else {
             // TODO Check nearest enemies
         }
-
+        if (mBerserkTools->isInStuffRange() && mBerserkTools->isStuffAvailable()) {
+            Log(DEBUG) << "SMASH!!!";
+            castAction.kickStaff();
+        }
         Behavior::turn(state);
+    }
+
+    void finalize() override {
+        mUpdateNeeded = true;
     }
 
     void update(Ptr<State> state) override {
@@ -107,13 +121,16 @@ private:
     }
 
 private:
+    bool mUpdateNeeded;
+    Point mWaypoint;
+    Path mPath;
     Point mPosition;
     double mAcceptedRadius;
     bool mBerserkMode;
     bool mFullProbability;
     Ptr<PathFinder> mFinder;
     Ptr<MagicSensors> mSensors;
-    Ptr<Weaponry> mWeaponry;
+    Ptr<BerserkTools> mBerserkTools;
 };
 
 
