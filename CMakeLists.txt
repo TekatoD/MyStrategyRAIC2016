@@ -89,8 +89,6 @@ set(SRC
         src/Mechanism.h
         src/WalkingAction.cpp
         src/WalkingAction.h
-        src/WalkingParameters.cpp
-        src/WalkingParameters.h
         src/CastAction.cpp
         src/CastAction.h
         src/MessagingAction.cpp
@@ -145,7 +143,11 @@ set(SRC
         src/HoldingPositionChecker.cpp
         src/HoldingPositionChecker.h
         src/TakeBonusBehavior.cpp
-        src/TakeBonusBehavior.h)
+        src/TakeBonusBehavior.h
+        src/RetreatBehavior.cpp
+        src/RetreatBehavior.h
+        src/WalkingBehavior.cpp
+        src/WalkingBehavior.h)
 
 add_executable(${PROJECT_NAME} ${SRC})
 add_definitions(-D_LINUX -D__DEBUG__)

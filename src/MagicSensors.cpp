@@ -67,7 +67,7 @@ void MagicSensors::update(Ptr<State> state) {
 }
 
 
-double MagicSensors::correctDirection(double direction, double segmentSize) {
+double MagicSensors::correctDirection(double direction, double segmentSize) const {
     if (!mTriggered) return direction;
     size_t count = mPositions.size();
     const double step = M_PI * 2 / count;

@@ -10,7 +10,6 @@
 #include <math.h>
 #include "Action.h"
 #include "Point.h"
-#include "WalkingParameters.h"
 
 class WalkingAction : public Action {
 public:

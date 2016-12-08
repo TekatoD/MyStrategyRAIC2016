@@ -9,23 +9,23 @@
 #include "Behavior.h"
 #include "MagicSensors.h"
 #include "PathFinder.h"
+#include "WalkingBehavior.h"
 
-class TakeBonusBehavior : public Behavior {
+class TakeBonusBehavior : public WalkingBehavior {
 public:
-    TakeBonusBehavior(const std::string& name, const Ptr<PathFinder>& finder, const Ptr<MagicSensors>& sensors,
-                      double factor);
+    TakeBonusBehavior(const std::string& name, const Point& targetPoint, double acceptedRadius,
+                    const Ptr<PathFinder>& finder, const Ptr<MagicSensors>& sensors)
+            : WalkingBehavior(name, targetPoint, acceptedRadius, finder, sensors) {
 
-    void turn(Ptr<State> state) override;
+    }
 
-    void update(Ptr<State> state) override;
+    void prepare(Ptr<State> state) override {
+        this->updateWalkingAction(state);
+    }
 
-private:
-    Point correctTarget(Ptr<State> state, const Point& target) const;
-
-private:
-    Ptr<PathFinder> mFinder;
-    Ptr<MagicSensors> mSensors;
-    Point mTarget;
+    void update(Ptr<State> state) override {
+        this->setProbability(1.0);
+    }
 };
 
 

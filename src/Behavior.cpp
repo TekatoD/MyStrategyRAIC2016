@@ -9,7 +9,7 @@
 void Behavior::turn(Ptr<State> state) {
     mWalkingAction.update(state);
     mCastAction.update(state);
-
+    this->prepare(std::move(state));
     mWalkingAction.perform();
     mCastAction.perform();
 }

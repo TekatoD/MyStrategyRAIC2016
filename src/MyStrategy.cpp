@@ -11,6 +11,8 @@
 #include "Clusterer.h"
 #include "HoldingPositionChecker.h"
 #include "TakeBonusBehavior.h"
+#include "DamagedWizardSituation.h"
+#include "RetreatBehavior.h"
 
 
 MyStrategy::MyStrategy() : mInitialized(false) {
@@ -143,13 +145,13 @@ void MyStrategy::initialize(Ptr<State> state) {
     const double filterRadius = std::sqrt(sectorSize * sectorSize * 2);
     // Initialize mechanisms
     auto filter = share<WorldFilter>(filterRadius);
-    auto bersertTools = share<BerserkTools>(filter);
+    auto berserkTools = share<BerserkTools>(filter);
     auto sensors = share<MagicSensors>(filter, 64, wizardSize * 1.5);
     auto finder = share<AStarPathFinder>(map);
     auto holdingChecker = share<HoldingPositionChecker>(32, 5.0);
     auto clusterer = share<Clusterer>(wizardSize * 8, true, wizardSize * 3);
 
-    mGameController.addMechanism(bersertTools);
+    mGameController.addMechanism(berserkTools);
     mGameController.addMechanism(filter);
     mGameController.addMechanism(sensors);
     mGameController.addMechanism(holdingChecker);
@@ -157,17 +159,17 @@ void MyStrategy::initialize(Ptr<State> state) {
 
     auto situationTopBonusExists = share<BonusExistsSituation>("top_bonus_exists", posBonusTop);
     auto situationBotBonusExists = share<BonusExistsSituation>("bot_bonus_exists", posBonusBot);
+    auto situationLowHeals = share<DamagedWizardSituation>("low_heals", self.getId(), self.getMaxLife() * 0.4,
+                                                           self.getLife(), self.getMaxLife());
 
-    auto behaviorGoToTopBonus = share<BerserkBehavior>("go_to_top_bonus", posBonusTop, finder, sensors, bersertTools,
-                                                       sectorSize, 3, false, true);
-    auto behaviorGoToBotBonus = share<BerserkBehavior>("go_to_bot_bonus", posBonusBot, finder, sensors, bersertTools,
-                                                       sectorSize, 3, false, true);
-    auto behaviorBonusGetter = share<TakeBonusBehavior>("get_bonus", finder, sensors, 7);
+    auto behaviorGoToTopBonus = share<BerserkBehavior>("go_to_top_bonus", posBonusTop, sectorSize, 3.0, false, finder, sensors, berserkTools);
+    auto behaviorGoToBotBonus = share<BerserkBehavior>("go_to_bot_bonus", posBonusBot, sectorSize, 3.0, false, finder, sensors, berserkTools);
+    auto behaviorRetreat = share<RetreatBehavior>("retreat", posBaseBot, sectorSize, 500.0, 10.0, finder, sensors);
 
     mGameController.addRelationship(share<Relationship>("go_to_top_bonus", situationTopBonusExists, behaviorGoToTopBonus));
     mGameController.addRelationship(share<Relationship>("go_to_bot_bonus", situationBotBonusExists, behaviorGoToBotBonus));
-    mGameController.addRelationship(share<Relationship>("get_top_bonus", situationBotBonusExists, behaviorBonusGetter));
-    mGameController.addRelationship(share<Relationship>("get_bot_bonus", situationTopBonusExists, behaviorBonusGetter));
+    mGameController.addRelationship(share<Relationship>("retreat", situationLowHeals, behaviorRetreat));
+
 
     // DO NOT EDIT WHAT'S BELOW!
     mInitialized = true;

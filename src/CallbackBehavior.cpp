@@ -12,7 +12,7 @@ CallbackBehavior::CallbackBehavior(const std::string& name,
         : Behavior(name), mMover(mover), mProbabilityGenerator(probabilityGenerator) {}
 
 
-void CallbackBehavior::turn(Ptr<State> state) {
+void CallbackBehavior::prepare(Ptr<State> state) {
     mMover(this->getWalkingAction(), this->getCastAction());
     Behavior::turn(Ptr<State>());
 }

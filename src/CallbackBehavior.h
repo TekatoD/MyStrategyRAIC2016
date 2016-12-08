@@ -13,7 +13,7 @@ public:
     CallbackBehavior(const std::string& name, const std::function<void(WalkingAction&, CastAction&)>& mover,
                      const std::function<double(Ptr<State>)>& probabilityGenerator);
 
-    void turn(Ptr<State> state) override;
+    void prepare(Ptr<State> state) override;
 
     void update(Ptr<State> state) override;
 

@@ -17,7 +17,9 @@
 
 class Behavior : public SelfDisabler, public Named, public virtual Ranked, public virtual Refreshable, NonCopyable {
 public:
-    virtual void turn(Ptr<State> state);
+    void turn(Ptr<State> state);
+
+    virtual void prepare(Ptr<State> state) = 0;
 
     virtual void finalize();
 

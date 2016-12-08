@@ -38,5 +38,6 @@ void BonusExistsSituation::update(Ptr<State> state) {
         this->setProbability(temp * temp);
     } else {
         this->setProbability(0.0);
+        mExists = false;
     }
 }

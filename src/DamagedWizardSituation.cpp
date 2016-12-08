@@ -29,13 +29,7 @@ void DamagedWizardSituation::update(Ptr<State> state) {
                             + mLevel * game.getWizardLifeRegenerationGrowthPerLevel();
         this->setHeals(mHP + regeneration);
     }
-
-    if (mHP <= mThreshold) {
-        this->setProbability(1.0);
-    } else {
-        auto factor = mThreshold / mMaxHP / 2.0;
-        this->setProbability((mHP - mThreshold) * factor);
-    }
+    this->setProbability((mHP <= mThreshold) ? 1.0 : 0.0);
 }
 
 double DamagedWizardSituation::getThreshold() const {
