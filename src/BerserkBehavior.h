@@ -8,7 +8,6 @@
 
 #include <cmath>
 #include <math.h>
-#include <assert.h>
 #include "Behavior.h"
 #include "BerserkTools.h"
 #include "PathFinder.h"
