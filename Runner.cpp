@@ -4,12 +4,23 @@
 #include <thread>
 
 #include "src/MyStrategy.h"
+#include "src/GridMap.h"
+#include <iostream>
+#include <time.h>
 
 using namespace model;
 using namespace std;
 
 int main(int argc, char* argv[]) {
     std::this_thread::sleep_for(3s);
+//    GridMap<int, 64, 64> gridMap{Point{0, 0}, 10};
+//    clock_t tStart = clock();
+//    gridMap.drawFilledCircle(Point{300, 300}, 400, 4);
+//    printf("Time taken: %.6fs\n", (double)(clock() - tStart)/CLOCKS_PER_SEC);
+////    gridMap.drawCircle(Point{300, 300}, 137, 4);
+////    gridMap.drawLine(Point{0, 0}, Point{100, 50}, 6);
+//    std::cout << gridMap.getGrid();
+
     if (argc == 4) {
         Runner runner(argv[1], argv[2], argv[3]);
         runner.run();

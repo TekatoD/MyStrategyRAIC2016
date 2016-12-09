@@ -74,6 +74,7 @@ void WorldFilter::updateProxies() const {
         this->updateProxy(world.getTrees(), mTrees);
         this->updateProxy(world.getMinions(), mMinions);
         this->updateProxy(world.getWizards(), mWizards);
+        this->updateProxy(world.getProjectiles(), mProjectiles);
     }
 }
 
