@@ -164,7 +164,7 @@ void MyStrategy::initialize(Ptr<State> state) {
 
     auto behaviorGoToTopBonus = share<BerserkBehavior>("go_to_top_bonus", posBonusTop, sectorSize, 3.0, false, finder, sensors, berserkTools, filter);
     auto behaviorGoToBotBonus = share<BerserkBehavior>("go_to_bot_bonus", posBonusBot, sectorSize, 3.0, false, finder, sensors, berserkTools, filter);
-    auto behaviorRetreat = share<RetreatBehavior>("retreat", posBaseBot, sectorSize, 500.0, 10.0, finder, sensors);
+    auto behaviorRetreat = share<RetreatBehavior>("retreat", std::vector<Point>{posBaseBot, wpCornerBot, wpCornerTop}, sectorSize, 500.0, 10.0, finder, sensors);
 
     mGameController.addRelationship(share<Relationship>("go_to_top_bonus", situationTopBonusExists, behaviorGoToTopBonus));
     mGameController.addRelationship(share<Relationship>("go_to_bot_bonus", situationBotBonusExists, behaviorGoToBotBonus));
