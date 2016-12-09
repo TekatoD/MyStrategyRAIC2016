@@ -10,30 +10,30 @@ WalkingAction::WalkingAction() {}
 
 
 void WalkingAction::perform() {
-    auto& targetPoint = mTargetPoint;
-    auto& trackingPoint = mTargetPoint;
-    double speedFactor = mSpeedFactor;
+    const auto& targetPoint = mTargetPoint;
+    const auto& trackingPoint = mTrackingPoint;
+    const double speedFactor = mSpeedFactor;
     // Create aliases
-    auto& self = mState->self;
-    auto& game = mState->game;
+    const auto& self = mState->self;
+    const auto& game = mState->game;
     auto& move = mState->move;
     // Update angles
-    auto angleToTarget = self.getAngleTo(targetPoint.getX(), targetPoint.getY());
-    auto angleToLook = self.getAngleTo(trackingPoint.getX(), trackingPoint.getY());
-    double dir = (angleToLook > 0) ? 1.0 : -1.0;
-    bool go_forward = std::abs(angleToLook) <= M_PI_2;
+    const auto angleToTarget = self.getAngleTo(targetPoint.getX(), targetPoint.getY());
+    const auto angleToLook = self.getAngleTo(trackingPoint.getX(), trackingPoint.getY());
+    const double dir = (angleToLook > 0) ? 1.0 : -1.0;
+    const bool goForward = std::abs(angleToTarget) <= M_PI_2;
     // Update speed limits
-    double max_speed = (go_forward)
+    double maxSpeed = (goForward)
                        ? game.getWizardForwardSpeed()
                        : game.getWizardStrafeSpeed();
-    double rest = targetPoint.getDistanceTo(self);
-    double turnLimit = dir * std::min(std::abs(angleToLook), game.getWizardMaxTurnAngle());
-    double speedLimit = std::min(rest, max_speed);
-    double strafeLimit = std::min(rest, game.getWizardStrafeSpeed());
+    const double rest = targetPoint.getDistanceTo(self);
+    const double turnLimit = dir * std::min(std::abs(angleToLook), game.getWizardMaxTurnAngle());
+    const double speedLimit = std::min(rest, maxSpeed);
+    const double strafeLimit = std::min(rest, game.getWizardStrafeSpeed());
     // Update speed
-    double turn = turnLimit * speedFactor;
-    double speed = cos(angleToTarget) * speedLimit * speedFactor;
-    double strafe = sin(angleToTarget) * strafeLimit * speedFactor;
+    const double turn = turnLimit * speedFactor;
+    const double speed = cos(angleToTarget) * speedLimit * speedFactor;
+    const double strafe = sin(angleToTarget) * strafeLimit * speedFactor;
     // Apply data
     move.setTurn(turn);
     move.setSpeed(speed);

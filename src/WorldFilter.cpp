@@ -68,7 +68,7 @@ void WorldFilter::setRadius(double radius) {
 void WorldFilter::updateProxies() const {
     if (!mUpdated) {
         mUpdated = true;
-        auto& world = mState->world;
+        const auto& world = mState->world;
         this->updateProxy(world.getBonuses(), mBonuses);
         this->updateProxy(world.getBuildings(), mBuildings);
         this->updateProxy(world.getTrees(), mTrees);

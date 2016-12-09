@@ -142,7 +142,7 @@ void MyStrategy::initialize(Ptr<State> state) {
     // Define constants
     const double wizardSize = game.getWizardRadius();
     const size_t sectorSize = 10 * wizardSize;
-    const double filterRadius = std::sqrt(sectorSize * sectorSize * 2);
+    const double filterRadius = self.getVisionRange();
     // Initialize mechanisms
     auto filter = share<WorldFilter>(filterRadius);
     auto berserkTools = share<BerserkTools>(filter);
@@ -162,8 +162,8 @@ void MyStrategy::initialize(Ptr<State> state) {
     auto situationLowHeals = share<DamagedWizardSituation>("low_heals", self.getId(), self.getMaxLife() * 0.4,
                                                            self.getLife(), self.getMaxLife());
 
-    auto behaviorGoToTopBonus = share<BerserkBehavior>("go_to_top_bonus", posBonusTop, sectorSize, 3.0, false, finder, sensors, berserkTools);
-    auto behaviorGoToBotBonus = share<BerserkBehavior>("go_to_bot_bonus", posBonusBot, sectorSize, 3.0, false, finder, sensors, berserkTools);
+    auto behaviorGoToTopBonus = share<BerserkBehavior>("go_to_top_bonus", posBonusTop, sectorSize, 3.0, false, finder, sensors, berserkTools, filter);
+    auto behaviorGoToBotBonus = share<BerserkBehavior>("go_to_bot_bonus", posBonusBot, sectorSize, 3.0, false, finder, sensors, berserkTools, filter);
     auto behaviorRetreat = share<RetreatBehavior>("retreat", posBaseBot, sectorSize, 500.0, 10.0, finder, sensors);
 
     mGameController.addRelationship(share<Relationship>("go_to_top_bonus", situationTopBonusExists, behaviorGoToTopBonus));

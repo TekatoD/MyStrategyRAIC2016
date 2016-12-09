@@ -32,10 +32,14 @@ public:
 
     bool isInStuffRange() const;
 
-private:
-    bool checkSkill(model::SkillType skill, Ptr<State> state) const;
+    double getCastRangeIncrement() const;
 
-    bool checkTimeout(model::ActionType actionType, Ptr<State> state) const;
+    bool isInCastRange() const;
+
+private:
+    bool checkSkill(const model::Wizard& wizard, model::SkillType skill) const;
+
+    bool checkTimeout(model::ActionType actionType) const;
 
     void updateTools() const;
 private:
@@ -49,6 +53,8 @@ private:
     mutable bool mHasteAvailable;
     mutable bool mShieldAvailable;
     mutable bool mInStuffRange;
+    mutable bool mInCastRange;
+    mutable bool mCastRangeIncrement;
 };
 
 

@@ -6,7 +6,7 @@
 #include "CastAction.h"
 
 
-CastAction::CastAction() : mAction(model::ActionType::ACTION_NONE) { }
+CastAction::CastAction() : mAction(model::ActionType::ACTION_NONE), mCastRangeIncrement(0.0) { }
 
 
 void CastAction::kickStaff() noexcept {
@@ -108,7 +108,7 @@ void CastAction::castProjectile(Ptr<State> state) noexcept {
     int remainingTicks = self.getRemainingActionCooldownTicks();
     int actionRemainingTicks = self.getRemainingCooldownTicksByAction()[mAction];
     if (remainingTicks == 0 && actionRemainingTicks == 0) {
-        mMaxCastDistance = std::min(mMaxCastDistance, game.getWizardCastRange());
+        mMaxCastDistance = std::min(mMaxCastDistance, game.getWizardCastRange() + mCastRangeIncrement);
         double castAngle = self.getAngleTo(mTargetPoint.getX(),
                                            mTargetPoint.getX());
         move.setAction(mAction);
@@ -152,4 +152,12 @@ bool CastAction::checkSkill(model::SkillType skill, Ptr<State> state) noexcept {
         return false;
     }
     return true;
+}
+
+double CastAction::getCastRangeIncrement() const {
+    return mCastRangeIncrement;
+}
+
+void CastAction::setCastRangeIncrement(double castRangeIncrement) {
+    mCastRangeIncrement = castRangeIncrement;
 }

@@ -26,6 +26,10 @@ public:
 
     void castShield(long long targetId = -1) noexcept;
 
+    double getCastRangeIncrement() const;
+
+    void setCastRangeIncrement(double castRangeIncrement);
+
     void perform() override;
 
 private:
@@ -48,6 +52,7 @@ private:
     double mMinCastDistance;
     double mMaxCastDistance;
     long long mTargetId;
+    double mCastRangeIncrement;
 };
 
 
