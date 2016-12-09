@@ -5,20 +5,20 @@
 
 #include <vector>
 
-#include "LineType.h"
+#include "LaneType.h"
 #include "SkillType.h"
 
 namespace model {
     class Message {
     private:
-        LineType line;
+        LaneType lane;
         SkillType skillToLearn;
         std::vector<signed char> rawMessage;
     public:
         Message();
-        Message(LineType line, SkillType skillToLearn, const std::vector<signed char>& rawMessage);
+        Message(LaneType lane, SkillType skillToLearn, const std::vector<signed char>& rawMessage);
 
-        LineType getLine() const;
+        LaneType getLane() const;
         SkillType getSkillToLearn() const;
         const std::vector<signed char>& getRawMessage() const;
     };

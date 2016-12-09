@@ -18,10 +18,7 @@ public:
 
     Size(size_t x, size_t y);
 
-    Size(const Size& other) {
-        mWidth = other.mWidth;
-        mHeight = other.mHeight;
-    }
+    Size(const Size& other);
 
 
     virtual size_t getWidth() const;

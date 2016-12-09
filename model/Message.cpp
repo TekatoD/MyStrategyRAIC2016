@@ -4,13 +4,13 @@ using namespace model;
 using namespace std;
 
 Message::Message()
-    : line(_LINE_UNKNOWN_), skillToLearn(_SKILL_UNKNOWN_), rawMessage(vector<signed char>()) { }
+    : lane(_LANE_UNKNOWN_), skillToLearn(_SKILL_UNKNOWN_), rawMessage(vector<signed char>()) { }
 
-Message::Message(LineType line, SkillType skillToLearn, const vector<signed char>& rawMessage)
-    : line(line), skillToLearn(skillToLearn), rawMessage(rawMessage) { }
+Message::Message(LaneType lane, SkillType skillToLearn, const vector<signed char>& rawMessage)
+    : lane(lane), skillToLearn(skillToLearn), rawMessage(rawMessage) { }
 
-LineType Message::getLine() const {
-    return line;
+LaneType Message::getLane() const {
+    return lane;
 }
 
 SkillType Message::getSkillToLearn() const {

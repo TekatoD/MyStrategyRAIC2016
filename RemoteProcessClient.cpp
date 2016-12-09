@@ -490,17 +490,17 @@ Message RemoteProcessClient::readMessage() {
         exit(20007);
     }
 
-    LineType line = readEnum<LineType>();
+    LaneType lane = readEnum<LaneType>();
     SkillType skillToLearn = readEnum<SkillType>();
     vector<signed char> rawMessage = readByteArray();
 
-    return Message(line, skillToLearn, rawMessage);
+    return Message(lane, skillToLearn, rawMessage);
 }
 
 void RemoteProcessClient::writeMessage(const Message& message) {
     writeBoolean(true);
 
-    writeEnum<LineType>(message.getLine());
+    writeEnum<LaneType>(message.getLane());
     writeEnum<SkillType>(message.getSkillToLearn());
     writeByteArray(message.getRawMessage());
 }

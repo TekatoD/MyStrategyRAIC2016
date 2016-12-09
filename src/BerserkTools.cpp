@@ -20,8 +20,8 @@ void BerserkTools::updateTools() const {
         const auto& game = mState->game;
         mStuffAvailable = this->checkTimeout(model::ACTION_STAFF);
         mMagicMissileAvailable = self.getMana() >= game.getMagicMissileManacost()
-                                 && (this->checkTimeout(model::ACTION_MAGIC_MISSILE)
-                                     || this->checkSkill(self, model::SKILL_ADVANCED_MAGIC_MISSILE));
+                                 && ((this->checkTimeout(model::ACTION_MAGIC_MISSILE)
+                                     || this->checkSkill(self, model::SKILL_ADVANCED_MAGIC_MISSILE)));
         mFrostBoltAvailable = self.getMana() >= game.getFrostBoltManacost()
                               && this->checkTimeout(model::ACTION_FROST_BOLT)
                               && this->checkSkill(self, model::SKILL_FROST_BOLT);

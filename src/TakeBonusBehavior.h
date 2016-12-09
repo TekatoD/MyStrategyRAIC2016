@@ -19,13 +19,9 @@ public:
 
     }
 
-    void prepare(Ptr<State> state) override {
-        this->updateWalkingAction(state);
-    }
+    void prepare(Ptr<State> state) override;
 
-    void update(Ptr<State> state) override {
-        this->setProbability(1.0);
-    }
+    void update(Ptr<State> state) override;
 };
 
 

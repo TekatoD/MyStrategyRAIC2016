@@ -97,3 +97,8 @@ const Size& Size::operator/=(size_t value) {
 bool Size::isContains(size_t x, size_t y) {
     return x >= 0 && x < mWidth && y >= 0 && y <= mHeight;
 }
+
+Size::Size(const Size& other) {
+    mWidth = other.mWidth;
+    mHeight = other.mHeight;
+}

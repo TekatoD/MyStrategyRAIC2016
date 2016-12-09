@@ -17,7 +17,7 @@
 
 class Situation: public SelfDisabler, public Named, public Ranked, public Refreshable, NonCopyable {
 public:
-    Situation(const std::string& name) : Named(name) {}
+    Situation(const std::string& name);
 
     friend std::ostream& operator<<(std::ostream& os, const Situation& situation);
 };
