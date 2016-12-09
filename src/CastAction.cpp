@@ -109,8 +109,7 @@ void CastAction::castProjectile(Ptr<State> state) noexcept {
     int actionRemainingTicks = self.getRemainingCooldownTicksByAction()[mAction];
     if (remainingTicks == 0 && actionRemainingTicks == 0) {
         mMaxCastDistance = std::min(mMaxCastDistance, game.getWizardCastRange() + mCastRangeIncrement);
-        double castAngle = self.getAngleTo(mTargetPoint.getX(),
-                                           mTargetPoint.getX());
+        double castAngle = self.getAngleTo(mTargetPoint.getX(), mTargetPoint.getY());
         move.setAction(mAction);
         move.setCastAngle(castAngle);
         move.setMinCastDistance(mMinCastDistance);

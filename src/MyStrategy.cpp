@@ -13,6 +13,7 @@
 #include "TakeBonusBehavior.h"
 #include "DamagedWizardSituation.h"
 #include "RetreatBehavior.h"
+#include "AttackBuildingSituation.h"
 
 
 MyStrategy::MyStrategy() : mInitialized(false) {
@@ -159,16 +160,37 @@ void MyStrategy::initialize(Ptr<State> state) {
 
     auto situationTopBonusExists = share<BonusExistsSituation>("top_bonus_exists", posBonusTop);
     auto situationBotBonusExists = share<BonusExistsSituation>("bot_bonus_exists", posBonusBot);
-    auto situationLowHeals = share<DamagedWizardSituation>("low_heals", self.getId(), self.getMaxLife() * 0.4,
-                                                           self.getLife(), self.getMaxLife());
+    auto situationLowHeals = share<DamagedWizardSituation>("low_health", self.getId(), self.getMaxLife() * 0.4, self.getLife(), self.getMaxLife());
+    auto behaviorRetreat = share<RetreatBehavior>("retreat", std::vector<Point>{posBaseBot, wpCornerBot, wpCornerTop}, sectorSize, 500.0, 10.0, finder, sensors);
+    auto situationAttackTopTower1 = share<AttackBuildingSituation>("attack_top_tower_1", posTowerTop1, game.getGuardianTowerAttackRange(), 5.0, clusterer);
+    auto situationAttackTopTower2 = share<AttackBuildingSituation>("attack_top_tower_2", posTowerTop2, game.getGuardianTowerAttackRange(), 9.0, clusterer);
+    auto situationAttackRightTower1 = share<AttackBuildingSituation>("attack_right_tower_1", posTowerRight1, game.getGuardianTowerAttackRange(), 5.0, clusterer);
+    auto situationAttackRightTower2 = share<AttackBuildingSituation>("attack_right_tower_2", posTowerRight2, game.getGuardianTowerAttackRange(), 9.0, clusterer);
+    auto situationAttackMidTower1 = share<AttackBuildingSituation>("attack_mid_tower_1", posTowerMidTop1, game.getGuardianTowerAttackRange(), 5.0, clusterer);
+    auto situationAttackMidTower2 = share<AttackBuildingSituation>("attack_mid_tower_2", posTowerMidTop2, game.getGuardianTowerAttackRange(), 9.0, clusterer);
+    auto situationAttackBase = share<AttackBuildingSituation>("attack_base", posBaseTop, game.getFactionBaseAttackRange(), 1.0, clusterer);
 
     auto behaviorGoToTopBonus = share<BerserkBehavior>("go_to_top_bonus", posBonusTop, sectorSize, 3.0, false, finder, sensors, berserkTools, filter);
     auto behaviorGoToBotBonus = share<BerserkBehavior>("go_to_bot_bonus", posBonusBot, sectorSize, 3.0, false, finder, sensors, berserkTools, filter);
-    auto behaviorRetreat = share<RetreatBehavior>("retreat", std::vector<Point>{posBaseBot, wpCornerBot, wpCornerTop}, sectorSize, 500.0, 10.0, finder, sensors);
+    auto behaviorAttackTopTower1 = share<BerserkBehavior>("go_to_top_tower_1", posTowerTop1, sectorSize, 1.0, true, finder, sensors, berserkTools, filter);
+    auto behaviorAttackTopTower2 = share<BerserkBehavior>("go_to_top_tower_2", posTowerTop2, sectorSize, 1.0, true, finder, sensors, berserkTools, filter);
+    auto behaviorAttackRightTower1 = share<BerserkBehavior>("go_to_right_tower_1", posTowerTop1, sectorSize, 1.0, true, finder, sensors, berserkTools, filter);
+    auto behaviorAttackRightTower2 = share<BerserkBehavior>("go_to_right_tower_2", posTowerTop2, sectorSize, 1.0, true, finder, sensors, berserkTools, filter);
+    auto behaviorAttackMidTower1 = share<BerserkBehavior>("go_to_mid_tower_1", posTowerMidTop1, sectorSize, 1.0, true, finder, sensors, berserkTools, filter);
+    auto behaviorAttackMidTower2 = share<BerserkBehavior>("go_to_mid_tower_2", posTowerMidTop2, sectorSize, 1.0, true, finder, sensors, berserkTools, filter);
+    auto behaviorAttackBase = share<BerserkBehavior>("go_to_enemy_base", posBaseTop, sectorSize, 1.0, true, finder, sensors, berserkTools, filter);
+
 
     mGameController.addRelationship(share<Relationship>("go_to_top_bonus", situationTopBonusExists, behaviorGoToTopBonus));
     mGameController.addRelationship(share<Relationship>("go_to_bot_bonus", situationBotBonusExists, behaviorGoToBotBonus));
     mGameController.addRelationship(share<Relationship>("retreat", situationLowHeals, behaviorRetreat));
+    mGameController.addRelationship(share<Relationship>("attack_top_tower_1", situationAttackTopTower1, behaviorAttackTopTower1));
+    mGameController.addRelationship(share<Relationship>("attack_top_tower_2", situationAttackTopTower2, behaviorAttackTopTower2));
+    mGameController.addRelationship(share<Relationship>("attack_right_tower_1", situationAttackRightTower1, behaviorAttackRightTower1));
+    mGameController.addRelationship(share<Relationship>("attack_right_tower_2", situationAttackRightTower2, behaviorAttackRightTower2));
+    mGameController.addRelationship(share<Relationship>("attack_top_tower_1", situationAttackMidTower1, behaviorAttackMidTower1));
+    mGameController.addRelationship(share<Relationship>("attack_top_tower_2", situationAttackMidTower2, behaviorAttackMidTower2));
+    mGameController.addRelationship(share<Relationship>("attack_base", situationAttackBase, behaviorAttackBase));
 
 
     // DO NOT EDIT WHAT'S BELOW!

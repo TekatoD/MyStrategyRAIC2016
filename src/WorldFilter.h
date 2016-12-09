@@ -43,7 +43,7 @@ private:
 
     template <class T>
     void updateProxy(const std::vector<T>& container, VectorProxy<T>& proxy) const {
-        proxy.clear();
+        proxy = VectorProxy<T>();
         proxy.reserve(container.size());
         auto me = Point(mState->self);
         for (auto&& item : container)

@@ -12,7 +12,7 @@ class DamagedWizardSituation : public Situation {
 public:
     DamagedWizardSituation(const std::string& name, long long id, double threshold, double heals, double maxHeals);
 
-    void update(Ptr<State> state) override;
+    virtual void update(Ptr<State> state) override;
 
     void setThreshold(double threshold);
 

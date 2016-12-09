@@ -8,6 +8,7 @@
 
 #include <cmath>
 #include <math.h>
+#include <assert.h>
 #include "Behavior.h"
 #include "BerserkTools.h"
 #include "PathFinder.h"
@@ -28,15 +29,16 @@ public:
         CastAction& castAction = this->getCastAction();
         const auto& self = state->self;
         const auto& world = state->world;
+        const auto& game = state->game;
         std::vector<const model::LivingUnit*> enemies;
         const auto& minions = mFilter->getMinions();
         const auto& wizards = mFilter->getWizards();
         enemies.reserve(minions.size());
         bool rampage = false;
-        for (auto&& m : minions)
-            if (m->getFaction() != self.getFaction())
+         for (auto&& m : minions)
+            if (m->getFaction() != self.getFaction() && m->getFaction() != model::FACTION_NEUTRAL)
                 enemies.push_back(m);
-        for (auto&& w : minions)
+        for (auto&& w : wizards)
             if (w->getFaction() != self.getFaction())
                 enemies.push_back(w);
 
@@ -48,18 +50,23 @@ public:
                 rampage = true;
             } else {
                 model::LivingUnit const* target = nullptr;
+                int inRange = 0;
                 for (auto&& e : enemies) {
-                    if (self.getCastRange() + mBerserkTools->getCastRangeIncrement() <= self.getDistanceTo(*e)) {
-                        if (target == nullptr || e->getLife() < target->getLife()) {
+                    if (self.getDistanceTo(*e) < game.getWizardCastRange()) {
+                        ++inRange;
+                        if (target == nullptr || e->getLife() < target->getLife()
+                                || e->getLife() == target->getLife()
+                                && e->getDistanceTo(self) < target->getDistanceTo(self)) {
                             target = e;
                         }
                     }
                 }
                 if (target != nullptr) {
                     this->setTrackingPoint({*target});
-                    if (std::abs(self.getAngleTo(*target)) <= 1e-7 && mBerserkTools->isMagicMissileAvailable()) {
+                    if (std::abs(self.getAngleTo(*target)) == 0 && mBerserkTools->isMagicMissileAvailable()) {
+                        Log(DEBUG) << "Cast magic missile!";
                         castAction.castMagicMissile({*target},
-                                                    self.getCastRange() + mBerserkTools->getCastRangeIncrement(),
+                                                    game.getWizardCastRange(),
                                                     self.getDistanceTo(*target) - target->getRadius());
                     }
                     rampage = true;

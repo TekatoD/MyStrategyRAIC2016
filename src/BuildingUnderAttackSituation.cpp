@@ -24,7 +24,6 @@ void BuildingUnderAttackSituation::update(Ptr<State> state) {
         return;
     }
 
-    auto& self = state->self;
     auto clusters = mClusterer->getEnemyClusters();
     if (std::find_if(clusters.cbegin(), clusters.cend(), [this](const MinionCluster& m) {
         return  mPosition.inCircle({m}, mRadius);

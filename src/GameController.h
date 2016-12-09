@@ -69,6 +69,7 @@ public:
             mechanism->update(state);
 
         for (auto&& situation : mSituationsSet) {
+            Log(DEBUG) << " -Updating" << situation->getName();
             situation->update(state);
             if (situation->isDisabled()) {
                 this->removeSituation(situation);
