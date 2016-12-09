@@ -8,6 +8,7 @@
 
 #include <set>
 #include <list>
+#include <unordered_set>
 #include "NonCopyable.h"
 #include "Behavior.h"
 #include "Situation.h"
@@ -34,6 +35,10 @@ public:
     }
 
     void addRelationship(Ptr<Relationship> relationship) {
+        Log(DEBUG) << "Add relationship between"
+                   << relationship->getBehavior()->getName()
+                   << "and"
+                   << relationship->getSituation()->getName();
         mBehaviorsSet.insert(relationship->getBehavior());
         mSituationsSet.insert(relationship->getSituation());
         mRelationshipsSet.insert(std::move(relationship));
@@ -69,11 +74,8 @@ public:
             mechanism->update(state);
 
         for (auto&& situation : mSituationsSet) {
-            Log(DEBUG) << " -Updating" << situation->getName();
-            situation->update(state);
-            if (situation->isDisabled()) {
-                this->removeSituation(situation);
-            } else {
+            if (!situation->isDisabled()) {
+                situation->update(state);
                 Log(DEBUG) << " -Situation" << situation->getName()
                            << "has factor" << situation->getFactor()
                            << "and probability" << situation->getProbability();
@@ -82,10 +84,8 @@ public:
         }
 
         for (auto&& behavior : mBehaviorsSet) {
-            behavior->update(state);
-            if (behavior->isDisabled()) {
-                this->removeBehavior(behavior);
-            } else {
+            if (!behavior->isDisabled()) {
+                behavior->update(state);
                 Log(DEBUG) << " -Behavior" << behavior->getName()
                            << "has factor" << behavior->getFactor()
                            << "and probability" << behavior->getProbability();

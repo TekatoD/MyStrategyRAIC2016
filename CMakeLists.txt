@@ -147,7 +147,7 @@ set(SRC
         src/RetreatBehavior.cpp
         src/RetreatBehavior.h
         src/WalkingBehavior.cpp
-        src/WalkingBehavior.h src/AttackBuildingSituation.cpp src/AttackBuildingSituation.h)
+        src/WalkingBehavior.h src/AttackBuildingSituation.cpp src/AttackBuildingSituation.h src/Defines.h)
 
 add_executable(${PROJECT_NAME} ${SRC})
 add_definitions(-D_LINUX -D__DEBUG__)

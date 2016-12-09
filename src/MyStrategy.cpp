@@ -161,7 +161,6 @@ void MyStrategy::initialize(Ptr<State> state) {
     auto situationTopBonusExists = share<BonusExistsSituation>("top_bonus_exists", posBonusTop);
     auto situationBotBonusExists = share<BonusExistsSituation>("bot_bonus_exists", posBonusBot);
     auto situationLowHeals = share<DamagedWizardSituation>("low_health", self.getId(), self.getMaxLife() * 0.4, self.getLife(), self.getMaxLife());
-    auto behaviorRetreat = share<RetreatBehavior>("retreat", std::vector<Point>{posBaseBot, wpCornerBot, wpCornerTop}, sectorSize, 500.0, 10.0, finder, sensors);
     auto situationAttackTopTower1 = share<AttackBuildingSituation>("attack_top_tower_1", posTowerTop1, game.getGuardianTowerAttackRange(), 5.0, clusterer);
     auto situationAttackTopTower2 = share<AttackBuildingSituation>("attack_top_tower_2", posTowerTop2, game.getGuardianTowerAttackRange(), 9.0, clusterer);
     auto situationAttackRightTower1 = share<AttackBuildingSituation>("attack_right_tower_1", posTowerRight1, game.getGuardianTowerAttackRange(), 5.0, clusterer);
@@ -170,8 +169,9 @@ void MyStrategy::initialize(Ptr<State> state) {
     auto situationAttackMidTower2 = share<AttackBuildingSituation>("attack_mid_tower_2", posTowerMidTop2, game.getGuardianTowerAttackRange(), 9.0, clusterer);
     auto situationAttackBase = share<AttackBuildingSituation>("attack_base", posBaseTop, game.getFactionBaseAttackRange(), 1.0, clusterer);
 
-    auto behaviorGoToTopBonus = share<BerserkBehavior>("go_to_top_bonus", posBonusTop, sectorSize, 3.0, false, finder, sensors, berserkTools, filter);
-    auto behaviorGoToBotBonus = share<BerserkBehavior>("go_to_bot_bonus", posBonusBot, sectorSize, 3.0, false, finder, sensors, berserkTools, filter);
+    auto behaviorGoToTopBonus = share<BerserkBehavior>("go_to_top_bonus", posBonusTop, sectorSize, 15.0, false, finder, sensors, berserkTools, filter);
+    auto behaviorGoToBotBonus = share<BerserkBehavior>("go_to_bot_bonus", posBonusBot, sectorSize, 15.0, false, finder, sensors, berserkTools, filter);
+    auto behaviorRetreat = share<RetreatBehavior>("retreat", std::vector<Point>{posBaseBot, wpCornerBot, wpCornerTop}, sectorSize, 500.0, 18.0, finder, sensors);
     auto behaviorAttackTopTower1 = share<BerserkBehavior>("go_to_top_tower_1", posTowerTop1, sectorSize, 1.0, true, finder, sensors, berserkTools, filter);
     auto behaviorAttackTopTower2 = share<BerserkBehavior>("go_to_top_tower_2", posTowerTop2, sectorSize, 1.0, true, finder, sensors, berserkTools, filter);
     auto behaviorAttackRightTower1 = share<BerserkBehavior>("go_to_right_tower_1", posTowerTop1, sectorSize, 1.0, true, finder, sensors, berserkTools, filter);

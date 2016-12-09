@@ -55,7 +55,11 @@ public:
             auto nearest = std::min_element(mRetreatPoints.begin(), mRetreatPoints.end(), [&danger](auto point1, auto point2){
                 return abs(danger->getAngleTo(point1.getX(), point1.getY())) < abs(danger->getAngleTo(point2.getX(), point2.getY()));
             });
-            this->setTargetPoint(*nearest);
+            if (nearest->getDistanceTo(self) > mSafeRange) {
+                this->setTargetPoint(*nearest);
+            } else {
+                this->setTargetPoint(mRetreatPoints[0]);
+            }
             this->updateWalkingAction(state);
         } else {
             this->stop(state);

@@ -13,6 +13,7 @@
 #include "Point.h"
 #include "Mechanism.h"
 #include "WorldFilter.h"
+#include "Defines.h"
 
 class MagicSensors : public Mechanism {
 public:
@@ -23,7 +24,7 @@ public:
     double correctDirection(double direction, double segmentSize) const;
 
     Point correctTarget(const Point& origin, double orientation, const Point& target) const {
-        auto corrected = this->correctDirection(orientation, M_PI_2);
+        auto corrected = this->correctDirection(orientation, PI_2);
         Point result = {target};
         if (orientation != corrected) {
             Point local = target - origin;

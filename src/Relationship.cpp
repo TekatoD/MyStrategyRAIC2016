@@ -20,6 +20,7 @@ Ptr<Behavior> Relationship::getBehavior() const {
 }
 
 double Relationship::getFactor() const {
+    if (mSituation->isDisabled() || mBehavior->isDisabled()) return  0.0;
     return   mSituation->getProbability() * mSituation->getFactor()
            * mBehavior->getProbability() * mBehavior->getFactor();
 }

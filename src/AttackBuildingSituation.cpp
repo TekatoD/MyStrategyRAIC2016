@@ -16,11 +16,13 @@ void AttackBuildingSituation::update(Ptr<State> state) {
     if (this->isDisabled()) return;
     const auto& world = state->world;
     const auto& buildings = world.getBuildings();
-    if (std::find_if(buildings.cbegin(), buildings.cend(), [this](const auto& b) {
-        return mPosition.inCircle({b}, 1.0);
-    }) == buildings.cend()) {
+    const auto& self = state->self;
+    const auto& game = state->game;
+    if (mPosition.inCircle({self}, self.getVisionRange())
+        && std::find_if(buildings.cbegin(), buildings.cend(), [this](const auto& b) {
+                return mPosition.inCircle({b}, 1.0);
+            }) == buildings.cend()) {
         this->disable();
-        this->setProbability(0.0);
         return;
     }
 

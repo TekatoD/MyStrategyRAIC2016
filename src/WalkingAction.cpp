@@ -4,6 +4,7 @@
  */
 
 #include "WalkingAction.h"
+#include "Defines.h"
 
 
 WalkingAction::WalkingAction() {}
@@ -21,7 +22,7 @@ void WalkingAction::perform() {
     const auto angleToTarget = self.getAngleTo(targetPoint.getX(), targetPoint.getY());
     const auto angleToLook = self.getAngleTo(trackingPoint.getX(), trackingPoint.getY());
     const double dir = (angleToLook > 0) ? 1.0 : -1.0;
-    const bool goForward = std::abs(angleToTarget) <= M_PI_2;
+    const bool goForward = std::abs(angleToTarget) <= PI_2;
     // Update speed limits
     double maxSpeed = (goForward)
                        ? game.getWizardForwardSpeed()

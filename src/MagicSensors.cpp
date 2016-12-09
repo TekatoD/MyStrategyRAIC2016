@@ -9,7 +9,7 @@
 
 MagicSensors::MagicSensors(Ptr<WorldFilter> filter, size_t count, double radius)
         : mRadius(radius), mFilter(std::move(filter)), mPositions(count), mSensors(count, false) {
-    const double step = M_PI * 2 / count;
+    const double step = PI * 2 / count;
     for (int i = 0; i < count; ++i) {
         mPositions[i] = {radius * std::cos(i * step), radius * std::sin(i * step)};
     }
@@ -70,7 +70,7 @@ void MagicSensors::update(Ptr<State> state) {
 double MagicSensors::correctDirection(double direction, double segmentSize) const {
     if (!mTriggered) return direction;
     size_t count = mPositions.size();
-    const double step = M_PI * 2 / count;
+    const double step = PI * 2 / count;
     size_t countInSegment = std::abs(std::floor(segmentSize / step));
     size_t center = (size_t) std::round(direction / step) % count;
     size_t min;

@@ -7,6 +7,7 @@
 
 
 #include <memory>
+#include <ostream>
 #include "State.h"
 #include "Ranked.h"
 #include "Refreshable.h"
@@ -17,6 +18,8 @@
 class Situation: public SelfDisabler, public Named, public Ranked, public Refreshable, NonCopyable {
 public:
     Situation(const std::string& name) : Named(name) {}
+
+    friend std::ostream& operator<<(std::ostream& os, const Situation& situation);
 };
 
 

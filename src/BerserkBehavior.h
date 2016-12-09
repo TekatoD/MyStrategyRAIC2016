@@ -33,6 +33,7 @@ public:
         std::vector<const model::LivingUnit*> enemies;
         const auto& minions = mFilter->getMinions();
         const auto& wizards = mFilter->getWizards();
+        const auto& buildings = mFilter->getBuildings();
         enemies.reserve(minions.size());
         bool rampage = false;
          for (auto&& m : minions)
@@ -41,6 +42,9 @@ public:
         for (auto&& w : wizards)
             if (w->getFaction() != self.getFaction())
                 enemies.push_back(w);
+        for (auto&& b : buildings)
+            if (b->getFaction() != self.getFaction())
+                enemies.push_back(b);
 
         if (!enemies.empty()) {
             // Hit staff
