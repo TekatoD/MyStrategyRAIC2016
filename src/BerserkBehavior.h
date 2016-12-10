@@ -13,9 +13,12 @@
 #include "PathFinder.h"
 #include "MagicSensors.h"
 #include "WalkingBehavior.h"
+#include "GridMap.h"
 
 class BerserkBehavior : public WalkingBehavior {
 public:
+    static constexpr size_t MAP_SIZE = 100;
+
     BerserkBehavior(const std::string& name, const Point& position, double acceptedRadius, double factor,
                     bool berserkMode, Ptr<PathFinder> finder, Ptr<MagicSensors> sensors,
                     Ptr<BerserkTools> berserkTools, Ptr<WorldFilter> filter)
@@ -33,7 +36,11 @@ private:
 
     void setBerserkMode(bool berserkMode);
 
-    void protectPosition(Ptr<State> state);
+    Ptr<GridMap<int, MAP_SIZE, MAP_SIZE>> getDamageMap(Ptr<State> state, bool drawMinions, bool drawWizards,
+                                                        bool drawBuildings, bool drawProjectiles);
+
+    Ptr<GridMap<int, MAP_SIZE, MAP_SIZE>> getAttackMap(Ptr<State> state);;
+
 
 private:
     Point mTargetPoint;

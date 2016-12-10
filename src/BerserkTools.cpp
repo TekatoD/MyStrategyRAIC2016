@@ -24,10 +24,10 @@ void BerserkTools::updateTools() const {
                                      || this->checkSkill(self, model::SKILL_ADVANCED_MAGIC_MISSILE)));
         mFrostBoltAvailable = self.getMana() >= game.getFrostBoltManacost()
                               && this->checkTimeout(model::ACTION_FROST_BOLT)
-                              && this->checkSkill(self, model::SKILL_FROST_BOLT);
+                              && (mFrostBoltKnown = this->checkSkill(self, model::SKILL_FROST_BOLT));
         mFireballAvailable = self.getMana() >= game.getFireballManacost()
                              && this->checkTimeout(model::ACTION_FIREBALL)
-                             && this->checkSkill(self, model::SKILL_FIREBALL);
+                             && (mFireballKnown = this->checkSkill(self, model::SKILL_FIREBALL));
         mHasteAvailable = self.getMana() >= game.getHasteManacost()
                           && this->checkTimeout(model::ACTION_HASTE)
                           && this->checkSkill(self, model::SKILL_HASTE);
@@ -83,21 +83,6 @@ void BerserkTools::updateTools() const {
                        && self.getDistanceTo(*t) <= game.getStaffRange() + t->getRadius();
             }) != trees.cend();
         }
-
-        mInCastRange = false;
-        if (!mInCastRange) {
-            mInCastRange = std::find_if(minions.cbegin(), minions.cend(), [this, &self, &game](const model::Minion* m) {
-                return m->getFaction() != self.getFaction()
-                       && self.getDistanceTo(*m) <= game.getWizardCastRange() + this->getCastRangeIncrement();
-            }) != minions.cend();
-        }
-
-        if (!mInCastRange) {
-            mInCastRange = std::find_if(wizards.cbegin(), wizards.cend(), [this, &self, &game](const model::Wizard* w) {
-                return w->getFaction() != self.getFaction()
-                       && self.getDistanceTo(*w) <= game.getWizardCastRange() + this->getCastRangeIncrement();
-            }) != wizards.cend();
-        }
     }
 }
 
@@ -152,7 +137,14 @@ bool BerserkTools::isInStuffRange() const {
     return mInStuffRange;
 }
 
-bool BerserkTools::isInCastRange() const {
+
+bool BerserkTools::isFireballKnown() const {
     this->updateTools();
-    return mInCastRange;
+    return mFireballKnown;
+}
+
+
+bool BerserkTools::isFrostBoltKnown() const {
+    this->updateTools();
+    return mFrostBoltKnown;
 }

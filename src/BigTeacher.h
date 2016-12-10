@@ -14,14 +14,15 @@
 #include "Situation.h"
 #include "Relationship.h"
 #include "Mechanism.h"
+#include "Teacher.h"
 
-class BigTeacher : public Mechanism {
+class BigTeacher : public Teacher {
 public:
-    void feedBehavior(Ptr<Behavior> behavior);
+    virtual void feedBehavior(Ptr<Behavior> behavior) override;
 
-    void feedSituation(Ptr<Situation> situation);
+    virtual void feedSituation(Ptr<Situation> situation) override;
 
-    void feedRelationship(Ptr<Relationship> relationship);
+    virtual void feedRelationship(Ptr<Relationship> relationship) override;
 
     void update(Ptr<State> state) override;
 

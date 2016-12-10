@@ -87,9 +87,9 @@ Point Point::operator*(double value) const {
 }
 
 
-const Point& Point::operator*=(double other) {
-    mX *= other;
-    mY *= other;
+const Point& Point::operator*=(double value) {
+    mX *= value;
+    mY *= value;
     return *this;
 }
 

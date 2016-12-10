@@ -1,5 +1,5 @@
 /**
- *  @autor tekatod
+ *  @autor arssivka
  *  @date 11/30/16
  */
 #include "AStarPathFinder.h"

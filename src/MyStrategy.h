@@ -3,7 +3,7 @@
 
 #include <mutex>
 #include "Strategy.h"
-#include "GameController.h"
+#include "Controller.h"
 #include "BigTeacher.h"
 
 class MyStrategy : public Strategy {
@@ -18,5 +18,5 @@ private:
 
 private:
     bool mInitialized;
-    GameController<BigTeacher> mGameController;
+    Controller mGameController;
 };

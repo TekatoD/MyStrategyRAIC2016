@@ -14,6 +14,7 @@
 #include "DamagedWizardSituation.h"
 #include "RetreatBehavior.h"
 #include "AttackBuildingSituation.h"
+#include "SimpleTeacher.h"
 
 
 MyStrategy::MyStrategy() : mInitialized(false) {
@@ -152,6 +153,7 @@ void MyStrategy::initialize(Ptr<State> state) {
     auto holdingChecker = share<HoldingPositionChecker>(32, 5.0);
     auto clusterer = share<Clusterer>(wizardSize * 4, true, wizardSize * 2);
 
+
     mGameController.addMechanism(berserkTools);
     mGameController.addMechanism(filter);
     mGameController.addMechanism(sensors);
@@ -192,6 +194,8 @@ void MyStrategy::initialize(Ptr<State> state) {
     mGameController.addRelationship(share<Relationship>("attack_top_tower_2", situationAttackMidTower2, behaviorAttackMidTower2));
     mGameController.addRelationship(share<Relationship>("attack_base", situationAttackBase, behaviorAttackBase));
 
+    auto teacher = share<SimpleTeacher>();
+    mGameController.setTeacher(teacher);
 
     // DO NOT EDIT WHAT'S BELOW!
     mInitialized = true;

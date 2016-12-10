@@ -1,5 +1,5 @@
 /**
- *  @autor tekatod
+ *  @autor arssivka
  *  @date 12/6/16
  */
 #include "MinionCluster.h"

@@ -80,7 +80,7 @@ public:
 
     Point operator*(double value) const;
 
-    const Point& operator*=(double other);
+    const Point& operator*=(double value);
 
     Point operator/(double value) const;
 

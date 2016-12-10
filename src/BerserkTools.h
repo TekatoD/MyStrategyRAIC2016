@@ -34,7 +34,9 @@ public:
 
     double getCastRangeIncrement() const;
 
-    bool isInCastRange() const;
+    bool isFireballKnown() const;
+
+    bool isFrostBoltKnown() const;
 
 private:
     bool checkSkill(const model::Wizard& wizard, model::SkillType skill) const;
@@ -53,8 +55,9 @@ private:
     mutable bool mHasteAvailable;
     mutable bool mShieldAvailable;
     mutable bool mInStuffRange;
-    mutable bool mInCastRange;
     mutable bool mCastRangeIncrement;
+    mutable bool mFireballKnown;
+    mutable bool mFrostBoltKnown;
 };
 
 

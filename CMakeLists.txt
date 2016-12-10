@@ -4,7 +4,13 @@ project(MyStrategy)
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/cmake")
-set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-O2 -Wno-unknown-pragmas -static -fno-optimize-sibling-calls -fno-strict-aliasing")
+set(CMAKE_CXX_FLAGS ${CMAKE_CXX_FLAGS} "-Wno-unknown-pragmas -static -fno-optimize-sibling-calls -fno-strict-aliasing")
+
+set(CPACK_GENERATOR "ZIP")
+set(CPACK_PACKAGE_FILE_NAME "${PROJECT_NAME}")
+set(CPACK_PACKAGE_DIRECTORY "${CMAKE_CURRENT_SOURCE_DIR}/src")
+
+include(CPack)
 
 set(SRC
         csimplesocket/ActiveSocket.cpp
@@ -74,7 +80,7 @@ set(SRC
         src/Behavior.cpp
         src/Behavior.h
         src/NonCopyable.h
-        src/GameController.h
+        src/Controller.h
         src/Relationship.cpp
         src/Relationship.h
         src/Pointer.h
@@ -146,7 +152,11 @@ set(SRC
         src/RetreatBehavior.cpp
         src/RetreatBehavior.h
         src/WalkingBehavior.cpp
-        src/WalkingBehavior.h src/AttackBuildingSituation.cpp src/AttackBuildingSituation.h src/Defines.h src/BerserkBehavior.cpp)
+        src/WalkingBehavior.h
+        src/AttackBuildingSituation.cpp
+        src/AttackBuildingSituation.h
+        src/Defines.h
+        src/BerserkBehavior.cpp src/Teacher.h src/Controller.cpp src/SimpleTeacher.cpp src/SimpleTeacher.h)
 
 add_executable(${PROJECT_NAME} ${SRC})
 add_definitions(-D_LINUX -D__DEBUG__)
