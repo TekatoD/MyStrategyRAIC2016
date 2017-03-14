@@ -156,7 +156,13 @@ set(SRC
         src/AttackBuildingSituation.cpp
         src/AttackBuildingSituation.h
         src/Defines.h
-        src/BerserkBehavior.cpp src/Teacher.h src/Controller.cpp src/SimpleTeacher.cpp src/SimpleTeacher.h)
+        src/BerserkBehavior.cpp
+        src/Teacher.h
+        src/Controller.cpp
+        src/SimpleTeacher.cpp
+        src/SimpleTeacher.h
+        src/genetic_reactor.h
+        src/parse_best.h)
 
 add_executable(${PROJECT_NAME} ${SRC})
 add_definitions(-D_LINUX -D__DEBUG__)
