@@ -15,6 +15,7 @@
 #include "RetreatBehavior.h"
 #include "AttackBuildingSituation.h"
 #include "SimpleTeacher.h"
+#include <fstream>
 
 
 MyStrategy::MyStrategy() : mInitialized(false) {
@@ -171,16 +172,26 @@ void MyStrategy::initialize(Ptr<State> state) {
     auto situationAttackMidTower2 = share<AttackBuildingSituation>("attack_mid_tower_2", posTowerMidTop2, game.getGuardianTowerAttackRange(), 9.0, clusterer);
     auto situationAttackBase = share<AttackBuildingSituation>("attack_base", posBaseTop, game.getFactionBaseAttackRange(), 1.0, clusterer);
 
-    auto behaviorGoToTopBonus = share<BerserkBehavior>("go_to_top_bonus", posBonusTop, sectorSize, 15.0, false, finder, sensors, berserkTools, filter);
-    auto behaviorGoToBotBonus = share<BerserkBehavior>("go_to_bot_bonus", posBonusBot, sectorSize, 15.0, false, finder, sensors, berserkTools, filter);
-    auto behaviorRetreat = share<RetreatBehavior>("retreat", std::vector<Point>{posBaseBot, wpCornerBot, wpCornerTop}, sectorSize, 500.0, 18.0, finder, sensors);
-    auto behaviorAttackTopTower1 = share<BerserkBehavior>("go_to_top_tower_1", posTowerTop1, sectorSize, 1.0, true, finder, sensors, berserkTools, filter);
-    auto behaviorAttackTopTower2 = share<BerserkBehavior>("go_to_top_tower_2", posTowerTop2, sectorSize, 1.0, true, finder, sensors, berserkTools, filter);
-    auto behaviorAttackRightTower1 = share<BerserkBehavior>("go_to_right_tower_1", posTowerTop1, sectorSize, 1.0, true, finder, sensors, berserkTools, filter);
-    auto behaviorAttackRightTower2 = share<BerserkBehavior>("go_to_right_tower_2", posTowerTop2, sectorSize, 1.0, true, finder, sensors, berserkTools, filter);
-    auto behaviorAttackMidTower1 = share<BerserkBehavior>("go_to_mid_tower_1", posTowerMidTop1, sectorSize, 1.0, true, finder, sensors, berserkTools, filter);
-    auto behaviorAttackMidTower2 = share<BerserkBehavior>("go_to_mid_tower_2", posTowerMidTop2, sectorSize, 1.0, true, finder, sensors, berserkTools, filter);
-    auto behaviorAttackBase = share<BerserkBehavior>("go_to_enemy_base", posBaseTop, sectorSize, 1.0, true, finder, sensors, berserkTools, filter);
+    std::ifstream f;
+    f.open("/home/tekatod/develop/cppstrategy2016/current.txt");
+    std::vector<double> factors;
+    factors.reserve(10);
+    for (size_t i = 0; i < 10; ++i) {
+        double d;
+        f >> d;
+        factors.push_back(d);
+    }
+
+    auto behaviorGoToTopBonus = share<BerserkBehavior>("go_to_top_bonus", posBonusTop, sectorSize, factors[0], false, finder, sensors, berserkTools, filter);
+    auto behaviorGoToBotBonus = share<BerserkBehavior>("go_to_bot_bonus", posBonusBot, sectorSize, factors[1], false, finder, sensors, berserkTools, filter);
+    auto behaviorRetreat = share<RetreatBehavior>("retreat", std::vector<Point>{posBaseBot, wpCornerBot, wpCornerTop}, sectorSize, 500.0, factors[2], finder, sensors);
+    auto behaviorAttackTopTower1 = share<BerserkBehavior>("go_to_top_tower_1", posTowerTop1, sectorSize, factors[3], true, finder, sensors, berserkTools, filter);
+    auto behaviorAttackTopTower2 = share<BerserkBehavior>("go_to_top_tower_2", posTowerTop2, sectorSize, factors[4], true, finder, sensors, berserkTools, filter);
+    auto behaviorAttackRightTower1 = share<BerserkBehavior>("go_to_right_tower_1", posTowerTop1, sectorSize, factors[5], true, finder, sensors, berserkTools, filter);
+    auto behaviorAttackRightTower2 = share<BerserkBehavior>("go_to_right_tower_2", posTowerTop2, sectorSize, factors[6], true, finder, sensors, berserkTools, filter);
+    auto behaviorAttackMidTower1 = share<BerserkBehavior>("go_to_mid_tower_1", posTowerMidTop1, sectorSize, factors[7], true, finder, sensors, berserkTools, filter);
+    auto behaviorAttackMidTower2 = share<BerserkBehavior>("go_to_mid_tower_2", posTowerMidTop2, sectorSize, factors[8], true, finder, sensors, berserkTools, filter);
+    auto behaviorAttackBase = share<BerserkBehavior>("go_to_enemy_base", posBaseTop, sectorSize, factors[9], true, finder, sensors, berserkTools, filter);
 
 
     mGameController.addRelationship(share<Relationship>("go_to_top_bonus", situationTopBonusExists, behaviorGoToTopBonus));

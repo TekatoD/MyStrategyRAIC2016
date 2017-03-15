@@ -30,7 +30,7 @@ public:
             m_generation.push_back(c);
         }
         this->get_next_dna(false);
-        m_best_log.open("best_log.txt", std::ios::trunc);
+        m_best_log.open("/home/tekatod/develop/cppstrategy2016/best_log.txt", std::ios::trunc);
     }
 
 
@@ -59,7 +59,7 @@ public:
         }
         std::ofstream f;
         size_t iters = m_generation[m_current_dna].dna.size();
-        f.open("current.txt", std::ios::trunc);
+        f.open("/home/tekatod/develop/cppstrategy2016/current.txt", std::ios::trunc);
         for(size_t i = 0; i < iters; ++i) {
             if(i != iters - 1) {
                 f << m_generation[m_current_dna].dna[i] << std::endl;

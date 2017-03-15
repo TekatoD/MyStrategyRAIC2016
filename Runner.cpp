@@ -15,7 +15,7 @@ using namespace model;
 using namespace std;
 
 int main(int argc, char* argv[]) {
-    genetic_reactor genetic_reactor1(2, 10, 2, 0.2);
+    genetic_reactor genetic_reactor1(1000, 10, 1000, 0.2);
     for (size_t i = 0; i < genetic_reactor1.get_generations_count(); ++i) {
         for(size_t j = 0; j < genetic_reactor1.get_generation_size(); ++j) {
             system("cd /home/tekatod/develop/cppstrategy2016/local-runner && bash local-runner-console.sh &");
